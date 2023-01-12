@@ -20,16 +20,6 @@ export default async (fastify: FastifyInstance) => {
     reply.send()
   })
 
-  fastify.post('/register', async (request: FastifyRequest, reply: FastifyReply) => {
-    const body: any = request.body;
-    const { username, password } = body;
-
-    reply
-      .status(200)
-      .send({ ok: true, info: { username, password } })
-
-  })
-
   fastify.post('/login', async (request: FastifyRequest, reply: FastifyReply) => {
     const body: any = request.body
     const username = body.username

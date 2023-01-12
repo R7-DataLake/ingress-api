@@ -12,7 +12,7 @@
     "strict": true,                   
     "typeRoots": [
       "node_modules/@types",
-      "typings"
+      "@types"
     ],
 
     "esModuleInterop": true,             
