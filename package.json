@@ -13,6 +13,7 @@
     "@fastify/cors": "^8.2.0",
     "@fastify/formbody": "^7.4.0",
     "@fastify/jwt": "^6.5.0",
+    "@fastify/rate-limit": "^7.6.0",
     "axios": "^1.2.2",
     "dotenv": "^16.0.3",
     "fastify": "^4.11.0",

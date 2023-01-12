@@ -24,6 +24,12 @@ const startServer = async () => {
     server.register(require('@fastify/formbody'))
     server.register(require('@fastify/cors'))
 
+    await server.register(import('@fastify/rate-limit'), {
+      global: false,
+      max: 100,
+      timeWindow: '1 minute'
+    })
+
     server.register(require('./plugins/db'), {
       options: {
         client: 'pg',
@@ -76,7 +82,14 @@ const startServer = async () => {
       }
     })
 
-    server.get('/health-check', async (request: any, reply: any) => {
+    server.get('/health-check', {
+      config: {
+        rateLimit: {
+          max: 3,
+          timeWindow: '1 minute'
+        }
+      }
+    }, async (request: any, reply: any) => {
       try {
         reply.status(200).send()
       } catch (e) {
