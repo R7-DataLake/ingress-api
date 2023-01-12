@@ -42,6 +42,7 @@ app.register(require('./plugins/db'), {
       password: process.env.DB_PASSWORD || '',
       database: process.env.DB_NAME || 'test',
     },
+    searchPath: ['public'],
     pool: {
       min: 0,
       max: 100
