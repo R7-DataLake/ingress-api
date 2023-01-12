@@ -2,12 +2,10 @@ import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
 import { Knex } from "knex";
 import * as crypto from 'crypto'
 
-import { UserModel } from '../models/user'
 import { LoginModel } from '../models/login'
 
 export default async (fastify: FastifyInstance) => {
 
-  const userModel = new UserModel();
   const loginModel = new LoginModel();
   const db: Knex = fastify.db;
 
