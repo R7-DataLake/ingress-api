@@ -11,8 +11,15 @@ export default async (fastify: FastifyInstance) => {
   const loginModel = new LoginModel();
   const db: Knex = fastify.db;
 
-  fastify.get('/', async (_request: FastifyRequest, reply: FastifyReply) => {
-    reply.send({ message: 'Hello world!' })
+  fastify.get('/', {
+    config: {
+      rateLimit: {
+        max: 3,
+        timeWindow: '1 minute'
+      }
+    }
+  }, async (_request: FastifyRequest, reply: FastifyReply) => {
+    reply.send()
   })
 
   fastify.post('/register', async (request: FastifyRequest, reply: FastifyReply) => {
@@ -22,22 +29,6 @@ export default async (fastify: FastifyInstance) => {
     reply
       .status(200)
       .send({ ok: true, info: { username, password } })
-
-  })
-
-  fastify.get('/users', async (request: FastifyRequest, reply: FastifyReply) => {
-
-    try {
-      const users = await userModel.read(db);
-      reply
-        .status(200)
-        .send({ ok: true, users })
-    } catch (error) {
-      console.error(error);
-      reply
-        .status(500)
-        .send({ ok: false, error: "Database connection failed." })
-    }
 
   })
 
