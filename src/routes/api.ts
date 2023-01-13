@@ -18,6 +18,8 @@ export default async (fastify: FastifyInstance) => {
   }, async (request: FastifyRequest, reply: FastifyReply) => {
 
     try {
+      const data = request.body;
+      await fastify.bullmq.add("PERSON", data);
       reply
         .status(StatusCodes.OK)
         .send(ReasonPhrases.OK)
@@ -37,6 +39,8 @@ export default async (fastify: FastifyInstance) => {
   }, async (request: FastifyRequest, reply: FastifyReply) => {
 
     try {
+      const data = request.body;
+      await fastify.bullmq.add("OPD", data);
       reply
         .status(StatusCodes.OK)
         .send(ReasonPhrases.OK)

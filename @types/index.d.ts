@@ -1,13 +1,11 @@
 import * as jsonwebtoken from 'jsonwebtoken';
-import { AxiosInstance } from 'axios';
-import knex from 'knex';
+import { Queue } from 'bullmq';
 
 declare module 'fastify' {
   interface FastifyInstance {
     jwt: jsonwebtoken
     authenticate: any
-    axios: AxiosInstance | any
-    db: knex | any
+    bullmq: Queue
   }
 
   interface FastifyRequest {

@@ -48,6 +48,36 @@ app.register(require('./plugins/jwt'), {
   }
 })
 
+// Queue
+const queueName = process.env.QUEUE_NAME || 'R7QUEUE'
+
+app.register(require('./plugins/bullmq'), {
+  queue_name: queueName,
+  options: {
+    connection: {
+      host: process.env.REDIS_HOST || "localhost",
+      port: Number(process.env.REDIS_PORT) || 6379,
+      enableOfflineQueue: false,
+    },
+    defaultJobOptions: {
+      delay: 1000,
+      attempts: 5,
+      backoff: {
+        type: 'exponential',
+        delay: 3000,
+      },
+      removeOnComplete: {
+        age: 3600, // keep up to 1 hour
+        count: 10000, // keep up to 1000 jobs
+      },
+      removeOnFail: {
+        age: 2 * 24 * 3600, // keep up to 24 hours
+      },
+    }
+  }
+})
+
+
 // routes
 app.register(autoload, {
   dir: path.join(__dirname, 'routes')

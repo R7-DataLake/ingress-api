@@ -1,4 +1,5 @@
 import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
+import { StatusCodes } from "http-status-codes";
 
 export default async (fastify: FastifyInstance) => {
 
@@ -11,9 +12,9 @@ export default async (fastify: FastifyInstance) => {
     }
   }, async (_request: FastifyRequest, reply: FastifyReply) => {
     try {
-      reply.status(200).send()
+      reply.status(StatusCodes.OK).send()
     } catch (e) {
-      reply.status(500).send()
+      reply.status(StatusCodes.INTERNAL_SERVER_ERROR).send()
     }
   })
 
