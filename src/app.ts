@@ -1,5 +1,6 @@
 import fastify from 'fastify'
 import path, { join } from 'path';
+
 const autoload = require('@fastify/autoload')
 
 require('dotenv').config({ path: join(__dirname, '../config.conf') })
@@ -55,8 +56,10 @@ app.register(require('./plugins/bullmq'), {
   queue_name: queueName,
   options: {
     connection: {
-      host: process.env.REDIS_HOST || "localhost",
+      host: process.env.REDIS_HOST || 'localhost',
       port: Number(process.env.REDIS_PORT) || 6379,
+      username: process.env.REDIS_USER || 'admin',
+      password: process.env.REDIS_PASS || 'admin',
       enableOfflineQueue: false,
     },
     defaultJobOptions: {
@@ -68,15 +71,14 @@ app.register(require('./plugins/bullmq'), {
       },
       removeOnComplete: {
         age: 3600, // keep up to 1 hour
-        count: 10000, // keep up to 1000 jobs
+        count: 10000, // keep up to 10000 jobs
       },
       removeOnFail: {
-        age: 2 * 24 * 3600, // keep up to 24 hours
+        age: 2 * 24 * 3600, // keep up to 48 hours
       },
     }
   }
 })
-
 
 // routes
 app.register(autoload, {
