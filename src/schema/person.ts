@@ -1,6 +1,6 @@
 import S from 'fluent-json-schema'
 
-const personSchema = S.array().items(
+const personSchema = S.array().minItems(1).maxItems(100).items(
   S.object()
     .prop('HOSPCODE', S.string().minLength(5).maxLength(5).required())
     .prop('HN', S.string().maxLength(50).required())

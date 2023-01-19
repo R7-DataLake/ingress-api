@@ -1,4 +1,6 @@
 import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
+import { PersonQueue } from "r7-dataset";
+
 import {
   ReasonPhrases,
   StatusCodes,
@@ -18,11 +20,17 @@ export default async (fastify: FastifyInstance) => {
   }, async (request: FastifyRequest, reply: FastifyReply) => {
 
     try {
-      const data = request.body;
-      await fastify.bullmq.add("PERSON", data);
+      const data: any = request.body;
+      const queues = data.map((v: any) => {
+        const obj: PersonQueue = {
+          name: "PERSON", data: v
+        }
+        return obj;
+      })
+      await fastify.bullmq.addBulk([{ name: "PERSON", data: queues }]);
       reply
         .status(StatusCodes.OK)
-        .send(ReasonPhrases.OK)
+        .send(getReasonPhrase(StatusCodes.OK))
     } catch (error) {
       request.log.error(error);
       reply

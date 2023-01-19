@@ -12,5 +12,4 @@ declare module 'fastify' {
     jwtVerify: any
     user: any
   }
-
 }
