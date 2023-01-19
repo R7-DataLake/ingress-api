@@ -9,6 +9,7 @@ import {
 import personSchema from '../schema/person';
 import opdSchema from '../schema/opd';
 import chronicSchema from '../schema/chronic';
+import opdxSchema from '../schema/opdx';
 
 export default async (fastify: FastifyInstance) => {
 
@@ -103,6 +104,42 @@ export default async (fastify: FastifyInstance) => {
       })
       // Add queue
       await fastify.bullmq.addBulk([{ name: "CHRONIC", data: queues }]);
+      // Reply
+      reply
+        .status(StatusCodes.OK)
+        .send(getReasonPhrase(StatusCodes.OK))
+    } catch (error) {
+      request.log.error(error);
+      reply
+        .status(StatusCodes.INTERNAL_SERVER_ERROR)
+        .send({ error: getReasonPhrase(StatusCodes.INTERNAL_SERVER_ERROR) })
+    }
+
+  })
+
+  // รับข้อมูล OPDX
+  fastify.post('/opdx', {
+    // Verify JWT
+    onRequest: [fastify.authenticate],
+    // Validate schema
+    schema: opdxSchema
+  }, async (request: FastifyRequest, reply: FastifyReply) => {
+
+    try {
+      // Get json from body
+      const data: any = request.body;
+      // Create queue object
+      const queues = data.map((value: any) => {
+        const obj: any = {
+          // Queue name
+          name: "OPDX",
+          // Queue data
+          data: value
+        }
+        return obj;
+      })
+      // Add queue
+      await fastify.bullmq.addBulk([{ name: "OPDX", data: queues }]);
       // Reply
       reply
         .status(StatusCodes.OK)
