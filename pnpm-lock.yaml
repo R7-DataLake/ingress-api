@@ -8,7 +8,6 @@ specifiers:
   '@fastify/rate-limit': ^7.6.0
   '@types/node': ^18.11.18
   bullmq: ^3.5.6
-  dotenv: ^16.0.3
   fastify: ^4.11.0
   fastify-plugin: ^4.5.0
   fluent-json-schema: ^4.0.0
@@ -32,7 +31,6 @@ dependencies:
   '@fastify/jwt': 6.5.0
   '@fastify/rate-limit': 7.6.0
   bullmq: 3.5.6
-  dotenv: 16.0.3
   fastify: 4.11.0
   fastify-plugin: 4.5.0
   fluent-json-schema: 4.0.0
@@ -903,11 +901,6 @@ packages:
     resolution: {integrity: sha512-CwffZFvlJffUg9zZA0uqrjQayUTC8ob94pnr5sFwaVv3IOmkfUHcWH+jXaQK3askE51Cqe8/9Ql/0uXNwqZ8Zg==}
     engines: {node: '>=0.10.0'}
     dev: true
-
-  /dotenv/16.0.3:
-    resolution: {integrity: sha512-7GO6HghkA5fYG9TYnNxi14/7K9f5occMlp3zXAuSxn7CKCxt9xbNWG7yF8hTCSUchlfWSe3uLmlPfigevRItzQ==}
-    engines: {node: '>=12'}
-    dev: false
 
   /duplexify/3.7.1:
     resolution: {integrity: sha512-07z8uv2wMyS51kKhD1KsdXJg5WQ6t93RneqRxUHnskXVtlYYkLqM0gqStQZ3pj073g687jPCHrqNfCzawLYh5g==}
