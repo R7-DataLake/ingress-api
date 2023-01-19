@@ -1,8 +1,6 @@
 import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
-import { PersonQueue } from "r7-dataset";
 
 import {
-  ReasonPhrases,
   StatusCodes,
   getReasonPhrase,
 } from 'http-status-codes';
@@ -10,6 +8,7 @@ import {
 // โหลด Schema
 import personSchema from '../schema/person';
 import opdSchema from '../schema/opd';
+import chronicSchema from '../schema/chronic';
 
 export default async (fastify: FastifyInstance) => {
 
@@ -22,7 +21,7 @@ export default async (fastify: FastifyInstance) => {
     try {
       const data: any = request.body;
       const queues = data.map((v: any) => {
-        const obj: PersonQueue = {
+        const obj: any = {
           name: "PERSON", data: v
         }
         return obj;
@@ -47,11 +46,60 @@ export default async (fastify: FastifyInstance) => {
   }, async (request: FastifyRequest, reply: FastifyReply) => {
 
     try {
-      const data = request.body;
-      await fastify.bullmq.add("OPD", data);
+      // Get json from body
+      const data: any = request.body;
+      // Create queue object
+      const queues = data.map((value: any) => {
+        const obj: any = {
+          // Queue name
+          name: "OPD",
+          // Queue data
+          data: value
+        }
+        return obj;
+      })
+      // Add queue
+      await fastify.bullmq.addBulk([{ name: "OPD", data: queues }]);
+      // Reply
       reply
         .status(StatusCodes.OK)
-        .send(ReasonPhrases.OK)
+        .send(getReasonPhrase(StatusCodes.OK))
+    } catch (error) {
+      request.log.error(error);
+      reply
+        .status(StatusCodes.INTERNAL_SERVER_ERROR)
+        .send({ error: getReasonPhrase(StatusCodes.INTERNAL_SERVER_ERROR) })
+    }
+
+  })
+
+  // รับข้อมูล CHRONIC
+  fastify.post('/chronic', {
+    // Verify JWT
+    onRequest: [fastify.authenticate],
+    // Validate schema
+    schema: chronicSchema
+  }, async (request: FastifyRequest, reply: FastifyReply) => {
+
+    try {
+      // Get json from body
+      const data: any = request.body;
+      // Create queue object
+      const queues = data.map((value: any) => {
+        const obj: any = {
+          // Queue name
+          name: "CHRONIC",
+          // Queue data
+          data: value
+        }
+        return obj;
+      })
+      // Add queue
+      await fastify.bullmq.addBulk([{ name: "CHRONIC", data: queues }]);
+      // Reply
+      reply
+        .status(StatusCodes.OK)
+        .send(getReasonPhrase(StatusCodes.OK))
     } catch (error) {
       request.log.error(error);
       reply
