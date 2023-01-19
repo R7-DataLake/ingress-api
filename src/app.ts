@@ -58,8 +58,8 @@ app.register(require('./plugins/bullmq'), {
     connection: {
       host: process.env.REDIS_HOST || 'localhost',
       port: Number(process.env.REDIS_PORT) || 6379,
-      username: process.env.REDIS_USER || 'admin',
-      password: process.env.REDIS_PASS || 'admin',
+      username: process.env.REDIS_USER || 'default',
+      password: process.env.REDIS_PASS || '789124',
       enableOfflineQueue: false,
     },
     defaultJobOptions: {
