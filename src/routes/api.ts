@@ -6,7 +6,7 @@ import {
 } from 'http-status-codes';
 
 // โหลด Schema
-import personSchemaxx from '../schema/person';
+import personSchema from '../schema/person';
 import opdSchema from '../schema/opd';
 import chronicSchema from '../schema/chronic';
 import opdxSchema from '../schema/opdx';

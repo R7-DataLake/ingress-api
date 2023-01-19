@@ -4,6 +4,7 @@
   "description": "Ingress service",
   "scripts": {
     "build": "npx gulp",
+    "test": "npx tsc",
     "start": "npx nodemon"
   },
   "keywords": [],
