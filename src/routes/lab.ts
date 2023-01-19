@@ -6,23 +6,21 @@ import {
 } from 'http-status-codes';
 
 // โหลด Schema
-import drugSchema from '../schema/drug';
+import labSchema from '../schema/lab';
 
 export default async (fastify: FastifyInstance) => {
 
-  // รับข้อมูล DRUG
-  fastify.post('/drug', {
-    // Verify JWT
+  // รับข้อมูล LAB
+  fastify.post('/lab', {
     onRequest: [fastify.authenticate],
-    // Validate schema
-    schema: drugSchema
+    schema: labSchema
   }, async (request: FastifyRequest, reply: FastifyReply) => {
 
     try {
       // Get json from body
       const data: any = request.body;
       // Add queue
-      await fastify.bullmq.add("DRUG", data);
+      await fastify.bullmq.add("LAB", data);
       // Reply
       reply
         .status(StatusCodes.OK)
