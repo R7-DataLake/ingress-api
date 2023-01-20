@@ -15,3 +15,17 @@ $ pnpm i
 3. แก้ไขโค้ด
 4. Push โค้ดขึ้น Repo ของตัวเอง
 5. ทำ Pull request
+
+
+# Environments
+
+```
+NODE_ENV=development
+
+INGR_SECRET_KEY=xxx
+
+INGR_REDIS_HOST=localhost
+INGR_REDIS_PORT=6379
+INGR_REDIS_PASSWORD=admin
+INGR_QUEUE_NAME=R7QUEUE
+```
