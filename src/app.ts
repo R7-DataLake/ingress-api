@@ -32,7 +32,7 @@ app.register(import('@fastify/rate-limit'), {
 
 // JWT
 app.register(require('./plugins/jwt'), {
-  secret: process.env.SECRET_KEY || 'UR6oFDD7mrOcpHruz2U71Xl4FRi1CDGu',
+  secret: process.env.INGR_SECRET_KEY || 'UR6oFDD7mrOcpHruz2U71Xl4FRi1CDGu',
   sign: {
     iss: 'r7.moph.go.th',
     expiresIn: '1d'
@@ -48,16 +48,15 @@ app.register(require('./plugins/jwt'), {
 })
 
 // Queue
-const queueName = process.env.QUEUE_NAME || 'R7QUEUE'
+const queueName = process.env.INGR_QUEUE_NAME || 'R7QUEUE'
 
 app.register(require('./plugins/bullmq'), {
   queue_name: queueName,
   options: {
     connection: {
-      host: process.env.REDIS_HOST || 'localhost',
-      port: Number(process.env.REDIS_PORT) || 6379,
-      username: process.env.REDIS_USER || 'default',
-      password: process.env.REDIS_PASS || '789124',
+      host: process.env.INGR_REDIS_HOST || 'localhost',
+      port: Number(process.env.INGR_REDIS_PORT) || 6379,
+      password: process.env.INGR_REDIS_PASS || '',
       enableOfflineQueue: false,
     },
     defaultJobOptions: {
