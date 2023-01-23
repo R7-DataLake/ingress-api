@@ -32,6 +32,14 @@ app.register(import('@fastify/rate-limit'), {
   timeWindow: '1 minute'
 })
 
+app.addHook('onSend', (request: any, reply: any, playload: any, next: any) => {
+  reply.headers({
+    'X-Powered-By': 'R7 Health Platform System',
+    'X-Processed-By': process.env.INGR_R7_SERVICE_HOSTNAME || 'dummy-server',
+  });
+  next();
+});
+
 // JWT
 app.register(require('./plugins/jwt'), {
   secret: process.env.INGR_SECRET_KEY || 'UR6oFDD7mrOcpHruz2U71Xl4FRi1CDGu',
