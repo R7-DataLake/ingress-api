@@ -7,6 +7,7 @@
 
 1. Fork โปรเจค
 2. Clone โปรเจคที่อยู่ใน repo ของตัวเอง 
+
 ```shell
 $ git clone https://github.com/<username>/ingress-api.git
 $ cd ingress-api
@@ -16,10 +17,9 @@ $ pnpm i
 4. Push โค้ดขึ้น Repo ของตัวเอง
 5. ทำ Pull request
 
+## Environments
 
-# Environments
-
-```
+```env
 NODE_ENV=development
 
 INGR_SECRET_KEY=xxx
@@ -27,7 +27,17 @@ INGR_SECRET_KEY=xxx
 INGR_REDIS_HOST=localhost
 INGR_REDIS_PORT=6379
 INGR_REDIS_PASSWORD=admin
+<<<<<<< HEAD
 INGR_QUEUE_NAME=R7QUEUE
 
 INGR_R7_SERVICE_HOSTNAME=Little-Pony
+=======
+INGR_QUEUE_NAME=MAHASARAKHAM
+```
+
+## Run
+
+```
+NODE_ENV=development INGR_REDIS_PASSWORD=xxxxxx INGR_QUEUE_NAME=MAHASARAKHAM npm start
+>>>>>>> 76b780f01a7b27fb787bea73d73642795f680254
 ```

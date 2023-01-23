@@ -19,18 +19,8 @@ export default async (fastify: FastifyInstance) => {
     try {
       // Get json from body
       const data: any = request.body;
-      // Create queue object
-      const queues = data.map((value: any) => {
-        const obj: any = {
-          // Queue name
-          name: "OPD",
-          // Queue data
-          data: value
-        }
-        return obj;
-      })
       // Add queue
-      await fastify.bullmq.addBulk([{ name: "OPD", data: queues }]);
+      await fastify.bullmq.add("OPD", data);
       // Reply
       reply
         .status(StatusCodes.OK)

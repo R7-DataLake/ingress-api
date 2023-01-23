@@ -1,9 +1,7 @@
 import fastify from 'fastify'
-import path, { join } from 'path';
+import path from 'path';
 
 const autoload = require('@fastify/autoload')
-
-require('dotenv').config({ path: join(__dirname, '../config.conf') })
 
 const app = fastify({
   logger: {
@@ -66,7 +64,7 @@ app.register(require('./plugins/bullmq'), {
     connection: {
       host: process.env.INGR_REDIS_HOST || 'localhost',
       port: Number(process.env.INGR_REDIS_PORT) || 6379,
-      password: process.env.INGR_REDIS_PASS || 'admin',
+      password: process.env.INGR_REDIS_PASS || '',
       enableOfflineQueue: false,
     },
     defaultJobOptions: {
