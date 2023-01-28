@@ -1,6 +1,6 @@
 import S from 'fluent-json-schema'
 
-const labSchema = S.array().minItems(1).maxItems(100).items(
+const schema = S.array().minItems(1).maxItems(100).items(
   S.object()
     .prop('hospcode', S.string().minLength(5).maxLength(5).required())
     .prop('hn', S.string().maxLength(50).required())
@@ -14,5 +14,5 @@ const labSchema = S.array().minItems(1).maxItems(100).items(
 )
 
 export default {
-  body: labSchema
+  body: schema
 }

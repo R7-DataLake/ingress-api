@@ -30,17 +30,25 @@ app.register(import('@fastify/rate-limit'), {
   timeWindow: '1 minute'
 })
 
+// Check data owner
+app.register(require('./plugins/check_data_owner'))
+
 app.addHook('onSend', (request: any, reply: any, playload: any, next: any) => {
   reply.headers({
     'X-Powered-By': 'R7 Health Platform System',
-    'X-Processed-By': process.env.INGR_R7_SERVICE_HOSTNAME || 'dummy-server',
+    'X-Processed-By': process.env.R7PLATFORM_INGR_R7_SERVICE_HOSTNAME || 'dummy-server',
   });
   next();
 });
 
+// app.addHook('preHandler', (request, reply, done) => {
+//   console.log(request.user)
+//   done()
+// })
+
 // JWT
 app.register(require('./plugins/jwt'), {
-  secret: process.env.INGR_SECRET_KEY || 'UR6oFDD7mrOcpHruz2U71Xl4FRi1CDGu',
+  secret: process.env.R7PLATFORM_INGR_SECRET_KEY || 'UR6oFDD7mrOcpHruz2U71Xl4FRi1CDGu',
   sign: {
     iss: 'r7.moph.go.th',
     expiresIn: '1d'
@@ -56,15 +64,15 @@ app.register(require('./plugins/jwt'), {
 })
 
 // Queue
-const queueName = process.env.INGR_QUEUE_NAME || 'R7QUEUE'
+const queueName = process.env.R7PLATFORM_INGR_QUEUE_NAME || 'R7QUEUE'
 
 app.register(require('./plugins/bullmq'), {
   queue_name: queueName,
   options: {
     connection: {
-      host: process.env.INGR_REDIS_HOST || 'localhost',
-      port: Number(process.env.INGR_REDIS_PORT) || 6379,
-      password: process.env.INGR_REDIS_PASS || '',
+      host: process.env.R7PLATFORM_INGR_REDIS_HOST || 'localhost',
+      port: Number(process.env.R7PLATFORM_INGR_REDIS_PORT) || 6379,
+      password: process.env.R7PLATFORM_INGR_REDIS_PASSWORD || '',
       enableOfflineQueue: false,
     },
     defaultJobOptions: {

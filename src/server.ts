@@ -14,7 +14,7 @@ const start = async () => {
       }
     }
 
-    app.listen({ port: 3000, host: '0.0.0.0' }, (err, address) => {
+    app.listen({ port: 3022, host: '0.0.0.0' }, (err, address) => {
       if (err) {
         console.error(err);
         process.exit(1);
