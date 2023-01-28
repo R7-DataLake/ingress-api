@@ -1,5 +1,6 @@
+import { Queue } from 'bullmq'
 import fastify from 'fastify'
-import path from 'path';
+import path from 'path'
 
 const autoload = require('@fastify/autoload')
 
@@ -41,11 +42,6 @@ app.addHook('onSend', (request: any, reply: any, playload: any, next: any) => {
   next();
 });
 
-// app.addHook('preHandler', (request, reply, done) => {
-//   console.log(request.user)
-//   done()
-// })
-
 // JWT
 app.register(require('./plugins/jwt'), {
   secret: process.env.R7PLATFORM_INGR_SECRET_KEY || 'UR6oFDD7mrOcpHruz2U71Xl4FRi1CDGu',
@@ -64,11 +60,8 @@ app.register(require('./plugins/jwt'), {
 })
 
 // Queue
-const queueName = process.env.R7PLATFORM_INGR_QUEUE_NAME || 'R7QUEUE'
-
-app.register(require('./plugins/bullmq'), {
-  queue_name: queueName,
-  options: {
+app.decorate("createQueue", (zoneName: any) => {
+  const queue = new Queue(zoneName, {
     connection: {
       host: process.env.R7PLATFORM_INGR_REDIS_HOST || 'localhost',
       port: Number(process.env.R7PLATFORM_INGR_REDIS_PORT) || 6379,
@@ -90,12 +83,14 @@ app.register(require('./plugins/bullmq'), {
         age: 2 * 24 * 3600, // keep up to 48 hours
       },
     }
-  }
-})
+  })
+
+  return queue
+});
 
 // routes
 app.register(autoload, {
   dir: path.join(__dirname, 'routes')
 })
 
-export default app;
+export default app
