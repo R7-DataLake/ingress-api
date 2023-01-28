@@ -14,12 +14,7 @@ export default async (fastify: FastifyInstance) => {
   fastify.post('/person', {
     onRequest: [fastify.authenticate],
     schema: personSchema,
-    preHandler: (request: FastifyRequest, reply: FastifyReply, done: any) => {
-      console.log(request.user)
-      console.log(request.body)
-
-      done()
-    }
+    preHandler: fastify.checkowner
   }, async (request: FastifyRequest, reply: FastifyReply) => {
 
     try {

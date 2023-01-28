@@ -30,6 +30,9 @@ app.register(import('@fastify/rate-limit'), {
   timeWindow: '1 minute'
 })
 
+// Check data owner
+app.register(require('./plugins/check_data_owner'))
+
 app.addHook('onSend', (request: any, reply: any, playload: any, next: any) => {
   reply.headers({
     'X-Powered-By': 'R7 Health Platform System',
@@ -69,7 +72,7 @@ app.register(require('./plugins/bullmq'), {
     connection: {
       host: process.env.R7PLATFORM_INGR_REDIS_HOST || 'localhost',
       port: Number(process.env.R7PLATFORM_INGR_REDIS_PORT) || 6379,
-      password: process.env.R7PLATFORM_INGR_REDIS_PASS || '',
+      password: process.env.R7PLATFORM_INGR_REDIS_PASSWORD || '',
       enableOfflineQueue: false,
     },
     defaultJobOptions: {

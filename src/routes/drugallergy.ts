@@ -6,7 +6,7 @@ import {
 } from 'http-status-codes';
 
 // โหลด Schema
-import drugallergySchema from '../schema/drugallergy';
+import schema from '../schema/drugallergy';
 
 export default async (fastify: FastifyInstance) => {
 
@@ -15,7 +15,7 @@ export default async (fastify: FastifyInstance) => {
     // Verify JWT
     onRequest: [fastify.authenticate],
     // Validate schema
-    schema: drugallergySchema
+    schema: schema
   }, async (request: FastifyRequest, reply: FastifyReply) => {
 
     try {

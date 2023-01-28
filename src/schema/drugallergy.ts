@@ -11,7 +11,7 @@ const schema = S.array().minItems(1).maxItems(100).items(
     .prop('alevel', S.enum(['1', '2', '3', '4', '5', '6', '7', '8']).required())
     .prop('symptom', S.string().maxLength(2).required())
     .prop('informant', S.enum(['1', '2', '3', '4', '5']))
-    .prop('informhosp', S.string().minLength(5).maxLength(5).required())
+    .prop('informhosp', S.string().minLength(5).maxLength(5))
     .prop('provider', S.string().maxLength(6))
     .prop('dUpdate', S.string().maxLength(14).minLength(14).required())
 )
