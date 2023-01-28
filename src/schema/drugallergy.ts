@@ -1,6 +1,6 @@
 import S from 'fluent-json-schema'
 
-const drugallerySchema = S.array().minItems(1).maxItems(100).items(
+const schema = S.array().minItems(1).maxItems(100).items(
   S.object()
     .prop('hospcode', S.string().minLength(5).maxLength(5).required())
     .prop('informhosp', S.string().minLength(5).maxLength(5).required())
@@ -17,5 +17,5 @@ const drugallerySchema = S.array().minItems(1).maxItems(100).items(
 )
 
 export default {
-  body: drugallerySchema
+  body: schema
 }

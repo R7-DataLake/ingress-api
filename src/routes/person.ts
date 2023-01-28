@@ -13,7 +13,13 @@ export default async (fastify: FastifyInstance) => {
   // รับข้อมูล PERSON
   fastify.post('/person', {
     onRequest: [fastify.authenticate],
-    schema: personSchema
+    schema: personSchema,
+    preHandler: (request: FastifyRequest, reply: FastifyReply, done: any) => {
+      console.log(request.user)
+      console.log(request.body)
+
+      done()
+    }
   }, async (request: FastifyRequest, reply: FastifyReply) => {
 
     try {

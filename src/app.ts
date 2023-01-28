@@ -38,6 +38,11 @@ app.addHook('onSend', (request: any, reply: any, playload: any, next: any) => {
   next();
 });
 
+// app.addHook('preHandler', (request, reply, done) => {
+//   console.log(request.user)
+//   done()
+// })
+
 // JWT
 app.register(require('./plugins/jwt'), {
   secret: process.env.R7PLATFORM_INGR_SECRET_KEY || 'UR6oFDD7mrOcpHruz2U71Xl4FRi1CDGu',
