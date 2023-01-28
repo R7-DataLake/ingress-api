@@ -13,14 +13,18 @@ export default async (fastify: FastifyInstance) => {
   // รับข้อมูล IPOP
   fastify.post('/ipop', {
     onRequest: [fastify.authenticate],
-    schema: ipopSchema
+    schema: ipopSchema,
+    // Check data owner
+    preHandler: fastify.checkowner
   }, async (request: FastifyRequest, reply: FastifyReply) => {
 
     try {
       // Get json from body
-      const data: any = request.body;
+      const data: any = request.body
+      const { ingress_zone } = request.user
+      const queue = fastify.createQueue(ingress_zone)
       // Add queue
-      await fastify.bullmq.add("IPOP", data);
+      await queue.add("IPOP", data)
       // Reply
       reply
         .status(StatusCodes.OK)

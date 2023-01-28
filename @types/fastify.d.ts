@@ -5,7 +5,7 @@ declare module 'fastify' {
   interface FastifyInstance {
     jwt: jsonwebtoken
     authenticate: any
-    bullmq: Queue
+    createQueue: any
     checkowner: any
   }
 

@@ -13,14 +13,17 @@ export default async (fastify: FastifyInstance) => {
   // รับข้อมูล APPOINT
   fastify.post('/appoint', {
     onRequest: [fastify.authenticate],
-    schema: appointSchema
+    schema: appointSchema,
+    preHandler: fastify.checkowner
   }, async (request: FastifyRequest, reply: FastifyReply) => {
 
     try {
       // Get json from body
-      const data: any = request.body;
+      const data: any = request.body
+      const { ingress_zone } = request.user
+      const queue = fastify.createQueue(ingress_zone)
       // Add queue
-      await fastify.bullmq.add("APPOINT", data);
+      await queue.add("APPOINT", data)
       // Reply
       reply
         .status(StatusCodes.OK)

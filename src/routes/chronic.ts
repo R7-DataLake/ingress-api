@@ -15,14 +15,18 @@ export default async (fastify: FastifyInstance) => {
     // Verify JWT
     onRequest: [fastify.authenticate],
     // Validate schema
-    schema: chronicSchema
+    schema: chronicSchema,
+    // Check data owner
+    preHandler: fastify.checkowner
   }, async (request: FastifyRequest, reply: FastifyReply) => {
 
     try {
       // Get json from body
       const data: any = request.body;
+      const { ingress_zone } = request.user
+      const queue = fastify.createQueue(ingress_zone)
       // Add queue
-      await fastify.bullmq.add("CHRONIC", data);
+      await queue.add("CHRONIC", data);
       // Reply
       reply
         .status(StatusCodes.OK)

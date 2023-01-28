@@ -15,14 +15,18 @@ export default async (fastify: FastifyInstance) => {
     // Verify JWT
     onRequest: [fastify.authenticate],
     // Validate schema
-    schema: drugSchema
+    schema: drugSchema,
+    // Check data owner
+    preHandler: fastify.checkowner
   }, async (request: FastifyRequest, reply: FastifyReply) => {
 
     try {
       // Get json from body
       const data: any = request.body;
+      const { ingress_zone } = request.user
+      const queue = fastify.createQueue(ingress_zone)
       // Add queue
-      await fastify.bullmq.add("DRUG", data);
+      await queue.add("DRUG", data);
       // Reply
       reply
         .status(StatusCodes.OK)
