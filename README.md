@@ -13,8 +13,8 @@
 2. Clone โปรเจคที่อยู่ใน repo ของตัวเอง 
 
 ```shell
-$ git clone https://github.com/<username>/ingress-api.git
-$ cd ingress-api
+$ git clone https://github.com/<username>/R7PLATFORM_ingress-api.git
+$ cd R7PLATFORM_ingress-api
 $ pnpm i
 ```
 3. แก้ไขโค้ด
@@ -26,18 +26,18 @@ $ pnpm i
 ```env
 NODE_ENV=development
 
-INGR_SECRET_KEY=xxx
+R7PLATFORM_INGR_SECRET_KEY=xxx
 
-INGR_REDIS_HOST=localhost
-INGR_REDIS_PORT=6379
-INGR_REDIS_PASSWORD=admin
-INGR_QUEUE_NAME=R7QUEUE
+R7PLATFORM_INGR_REDIS_HOST=localhost
+R7PLATFORM_INGR_REDIS_PORT=6379
+R7PLATFORM_INGR_REDIS_PASSWORD=admin
+R7PLATFORM_INGR_QUEUE_NAME=R7QUEUE
 
-INGR_R7_SERVICE_HOSTNAME=Little-Pony
+R7PLATFORM_INGR_R7_SERVICE_HOSTNAME=Little-Pony
 ```
 
 ## Run
 
 ```
-NODE_ENV=development INGR_REDIS_PASSWORD=xxxxxx INGR_QUEUE_NAME=MAHASARAKHAM npm start
+NODE_ENV=development R7PLATFORM_INGR_REDIS_PASSWORD=xxxxxx R7PLATFORM_INGR_QUEUE_NAME=MAHASARAKHAM npm start
 ```
