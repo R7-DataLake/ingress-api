@@ -13,8 +13,8 @@
 2. Clone โปรเจคที่อยู่ใน repo ของตัวเอง 
 
 ```shell
-$ git clone https://github.com/<username>/R7PLATFORM_ingress-api.git
-$ cd R7PLATFORM_ingress-api
+$ git clone https://github.com/<username>/ingress-api.git
+$ cd ingress-api
 $ pnpm i
 ```
 3. แก้ไขโค้ด

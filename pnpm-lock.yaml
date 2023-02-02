@@ -1,9 +1,9 @@
 lockfileVersion: 5.4
 
 specifiers:
-  '@fastify/autoload': ^5.7.1
   '@fastify/cors': ^8.2.0
   '@fastify/formbody': ^7.4.0
+  '@fastify/helmet': ^10.1.0
   '@fastify/jwt': ^6.5.0
   '@fastify/rate-limit': ^7.6.0
   '@types/node': ^18.11.18
@@ -22,9 +22,9 @@ specifiers:
   typescript: ^4.9.4
 
 dependencies:
-  '@fastify/autoload': 5.7.1
   '@fastify/cors': 8.2.0
   '@fastify/formbody': 7.4.0
+  '@fastify/helmet': 10.1.0
   '@fastify/jwt': 6.5.0
   '@fastify/rate-limit': 7.6.0
   bullmq: 3.5.6
@@ -54,12 +54,6 @@ packages:
       fast-uri: 2.2.0
     dev: false
 
-  /@fastify/autoload/5.7.1:
-    resolution: {integrity: sha512-F5c94MYAF0tacVu6X4/1ojO7fzmgrJXsqitDtpqknXgiHZpeFNhYSnNCUHPz6UDRKsfkDohmh0fiPTtOd8clzQ==}
-    dependencies:
-      pkg-up: 3.1.0
-    dev: false
-
   /@fastify/cors/8.2.0:
     resolution: {integrity: sha512-qDgwpmg6C4D0D3nh8MTMuRXWyEwPnDZDBODaJv90FP2o9ukbahJByW4FtrM5Bpod5KbTf1oIExBmpItbUTQmHg==}
     dependencies:
@@ -86,6 +80,13 @@ packages:
     dependencies:
       fast-querystring: 1.1.0
       fastify-plugin: 4.5.0
+    dev: false
+
+  /@fastify/helmet/10.1.0:
+    resolution: {integrity: sha512-v7QJPYf1uVcCwzyHzkDGcHTqDPscXj/61JKxOdvczyDPAKTxSeb9Sc2OBActXaj7zUELiAdgnkKkzNwmCNzBLQ==}
+    dependencies:
+      fastify-plugin: 4.5.0
+      helmet: 6.0.1
     dev: false
 
   /@fastify/jwt/6.5.0:
@@ -1106,13 +1107,6 @@ packages:
       pinkie-promise: 2.0.1
     dev: true
 
-  /find-up/3.0.0:
-    resolution: {integrity: sha512-1yD6RmLI1XBfxugvORwlck6f75tYL+iR0jqwsOrOxMZyGYqUuDhJ0l4AXdO1iX/FTs9cBAMEk1gWSEx1kSbylg==}
-    engines: {node: '>=6'}
-    dependencies:
-      locate-path: 3.0.0
-    dev: false
-
   /findup-sync/2.0.0:
     resolution: {integrity: sha512-vs+3unmJT45eczmcAZ6zMJtxN3l/QXeccaXQx5cu/MeJMhewVfoWZqibRkOxPnmoR59+Zy5hjabfQc6JLSah4g==}
     engines: {node: '>= 0.10'}
@@ -1477,6 +1471,11 @@ packages:
     dependencies:
       function-bind: 1.1.1
     dev: true
+
+  /helmet/6.0.1:
+    resolution: {integrity: sha512-8wo+VdQhTMVBMCITYZaGTbE4lvlthelPYSvoyNvk4RECTmrVjMerp9RfUOQXZWLvCcAn1pKj7ZRxK4lI9Alrcw==}
+    engines: {node: '>=14.0.0'}
+    dev: false
 
   /help-me/4.2.0:
     resolution: {integrity: sha512-TAOnTB8Tz5Dw8penUuzHVrKNKlCIbwwbHnXraNJxPwf8LRtE2HlM84RYuezMFcwOJmoYOCWVDyJ8TQGxn9PgxA==}
@@ -1860,14 +1859,6 @@ packages:
       strip-bom: 2.0.0
     dev: true
 
-  /locate-path/3.0.0:
-    resolution: {integrity: sha512-7AO748wWnIhNqAuaty2ZWHkQHRSNfPVIsPIfwEOWO22AmaoVrWavlOcMR5nzTLNYvp36X220/maaRsrec1G65A==}
-    engines: {node: '>=6'}
-    dependencies:
-      p-locate: 3.0.0
-      path-exists: 3.0.0
-    dev: false
-
   /lodash.defaults/4.2.0:
     resolution: {integrity: sha512-qjxPLHd3r5DnsdGacqOMU6pb/avJzdh9tFX2ymgoZE27BmjXrNy/y4LoaiTeAb+O3gL8AfpJGtqfX/ae2leYYQ==}
     dev: false
@@ -2209,25 +2200,6 @@ packages:
       lcid: 1.0.0
     dev: true
 
-  /p-limit/2.3.0:
-    resolution: {integrity: sha512-//88mFWSJx8lxCzwdAABTJL2MyWB12+eIY7MDL2SqLmAkeKU9qxRvWuSyTjm3FUmpBEMuFfckAIqEaVGUDxb6w==}
-    engines: {node: '>=6'}
-    dependencies:
-      p-try: 2.2.0
-    dev: false
-
-  /p-locate/3.0.0:
-    resolution: {integrity: sha512-x+12w/To+4GFfgJhBEpiDcLozRJGegY+Ei7/z0tSLkMmxGZNybVMSfWj9aJn8Z5Fc7dBUNJOOVgPv2H7IwulSQ==}
-    engines: {node: '>=6'}
-    dependencies:
-      p-limit: 2.3.0
-    dev: false
-
-  /p-try/2.2.0:
-    resolution: {integrity: sha512-R4nPAVTAU0B9D35/Gk3uJf/7XYbQcyohSKdvAxIRSNghFl4e71hVoGnBNQz9cWaXxO2I10KTC+3jMdvvoKw6dQ==}
-    engines: {node: '>=6'}
-    dev: false
-
   /parse-filepath/1.0.2:
     resolution: {integrity: sha512-FwdRXKCohSVeXqwtYonZTXtbGJKrn+HNyWDYVcp5yuJlesTwNH4rsmRZ+GrKAPJ5bLpRxESMeS+Rl0VCHRvB2Q==}
     engines: {node: '>=0.8'}
@@ -2269,11 +2241,6 @@ packages:
     dependencies:
       pinkie-promise: 2.0.1
     dev: true
-
-  /path-exists/3.0.0:
-    resolution: {integrity: sha512-bpC7GYwiDYQ4wYLe+FA8lhRjhQCMcQGuSgGGqDkg/QerRWw9CmGRT0iSOVRSZJ29NMLZgIzqaljJ63oaL4NIJQ==}
-    engines: {node: '>=4'}
-    dev: false
 
   /path-is-absolute/1.0.1:
     resolution: {integrity: sha512-AVbw3UJ2e9bq64vSaS9Am0fje1Pa8pbGqTTsmXfaIiMpnr5DlDhfJOuLj9Sf95ZPVDAUerDfEk88MPmPe7UCQg==}
@@ -2373,13 +2340,6 @@ packages:
       safe-stable-stringify: 2.4.2
       sonic-boom: 3.2.1
       thread-stream: 2.2.0
-    dev: false
-
-  /pkg-up/3.1.0:
-    resolution: {integrity: sha512-nDywThFk1i4BQK4twPQ6TA4RT8bDY96yeuCVBWL3ePARCiEKDRSrNGbFIgUJpLp+XeIR65v8ra7WuJOFUBtkMA==}
-    engines: {node: '>=8'}
-    dependencies:
-      find-up: 3.0.0
     dev: false
 
   /plugin-error/1.0.1:

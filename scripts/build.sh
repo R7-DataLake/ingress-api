@@ -1,0 +1,1 @@
+docker build -t mophos/r7platform-ingress-api . --no-cache
