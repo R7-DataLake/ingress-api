@@ -2,7 +2,7 @@ import { FastifyRequest, FastifyReply } from 'fastify'
 import fp from 'fastify-plugin'
 import { getReasonPhrase, StatusCodes } from 'http-status-codes'
 
-module.exports = fp(async (fastify: any, opts: any) => {
+module.exports = fp(async (fastify: any, _opts: any) => {
 
   fastify.decorate("checkowner", async (request: FastifyRequest, reply: FastifyReply, done: any) => {
     try {
@@ -27,10 +27,11 @@ module.exports = fp(async (fastify: any, opts: any) => {
 
       done()
 
-    } catch (err) {
+    } catch (error: any) {
+      request.log.error(error)
       reply
-        .status(StatusCodes.UNAUTHORIZED)
-        .send(getReasonPhrase(StatusCodes.UNAUTHORIZED))
+        .status(StatusCodes.INTERNAL_SERVER_ERROR)
+        .send(getReasonPhrase(StatusCodes.INTERNAL_SERVER_ERROR))
     }
   })
 }, { fastify: '4.x', name: 'fastify/validate-hospcode' })

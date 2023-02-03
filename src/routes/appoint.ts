@@ -1,12 +1,12 @@
-import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
+import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify"
 
 import {
   StatusCodes,
   getReasonPhrase,
-} from 'http-status-codes';
+} from 'http-status-codes'
 
 // โหลด Schema
-import appointSchema from '../schema/appoint';
+import appointSchema from '../schema/appoint'
 
 export default async (fastify: FastifyInstance) => {
 
