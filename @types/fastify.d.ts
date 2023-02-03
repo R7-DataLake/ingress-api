@@ -5,7 +5,7 @@ declare module 'fastify' {
   interface FastifyInstance {
     jwt: jsonwebtoken
     authenticate: any
-    createQueue: any
+    createQueue(string): any
     checkowner: any
   }
 

@@ -21,11 +21,28 @@ export default async (fastify: FastifyInstance) => {
     try {
       // Get json from body
       const data: any = request.body
-      const { ingress_zone } = request.user
+      const { ingress_zone, hospcode } = request.user
+
+      let isError = false
+
+      data.forEach((i: any) => {
+        if (i.hospcode !== hospcode) {
+          isError = true
+        }
+      });
+
+      if (isError) {
+        return reply
+          .status(StatusCodes.BAD_REQUEST)
+          .send({
+            error: 'This information is not your organization'
+          })
+      }
+
       const queue = fastify.createQueue(ingress_zone)
+
       // Add queue
       await queue.add("IPOP", data)
-      // Reply
       reply
         .status(StatusCodes.OK)
         .send(getReasonPhrase(StatusCodes.OK))
