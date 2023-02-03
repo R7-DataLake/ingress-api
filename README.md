@@ -3,7 +3,7 @@
 ![Alt](https://repobeats.axiom.co/api/embed/b22a4a0ea7d32d666f25f853cad1a8cff26d9d81.svg "Repobeats analytics image")
 
 # ความต้องการของระบบ
-1. Node.js 18.x
+1. Node.js 19.x
 2. Redis Server 7.x
 3. `pnpm` (https://pnpm.io/installation)
 
