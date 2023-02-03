@@ -1,17 +1,17 @@
 import S from 'fluent-json-schema'
 
-const opopSchema = S.array().minItems(1).maxItems(100).items(
+const schema = S.array().minItems(1).maxItems(100).items(
   S.object()
-    .prop('HOSPCODE', S.string().minLength(5).maxLength(5).required())
-    .prop('HN', S.string().maxLength(50).required())
-    .prop('SEQ', S.string().maxLength(15).required())
-    .prop('DATEOP', S.string().maxLength(8).minLength(8).required())
-    .prop('OPER', S.string().maxLength(7).minLength(3).required())
-    .prop('DROPID', S.string().maxLength(6).required())
-    .prop('SERVPRICE', S.number().maximum(999999).default(0).required())
-    .prop('D_UPDATE', S.string().maxLength(14).minLength(14).required())
+    .prop('hospcode', S.string().minLength(5).maxLength(5).required())
+    .prop('hn', S.string().maxLength(50).required())
+    .prop('seq', S.string().maxLength(15).required())
+    .prop('dateop', S.string().maxLength(8).minLength(8).required())
+    .prop('oper', S.string().maxLength(7).minLength(3).required())
+    .prop('dropid', S.string().maxLength(6).required())
+    .prop('servprice', S.number().maximum(999999).default(0).required())
+    .prop('dUpdate', S.string().maxLength(14).minLength(14).required())
 )
 
 export default {
-  body: opopSchema
+  body: schema
 }

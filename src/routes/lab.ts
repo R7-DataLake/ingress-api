@@ -1,4 +1,4 @@
-import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
+import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify"
 
 import {
   StatusCodes,
@@ -6,14 +6,14 @@ import {
 } from 'http-status-codes'
 
 // โหลด Schema
-import ipopSchema from '../schema/ipop'
+import labSchema from '../schema/lab'
 
 export default async (fastify: FastifyInstance) => {
 
-  // รับข้อมูล IPOP
-  fastify.post('/ipop', {
+  // รับข้อมูล LAB
+  fastify.post('/lab', {
     onRequest: [fastify.authenticate],
-    schema: ipopSchema,
+    schema: labSchema,
     // Check data owner
     preHandler: fastify.checkowner
   }, async (request: FastifyRequest, reply: FastifyReply) => {
@@ -24,7 +24,7 @@ export default async (fastify: FastifyInstance) => {
       const { ingress_zone } = request.user
       const queue = fastify.createQueue(ingress_zone)
       // Add queue
-      await queue.add("IPOP", data)
+      await queue.add("LAB", data)
       // Reply
       reply
         .status(StatusCodes.OK)

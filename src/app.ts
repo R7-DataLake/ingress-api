@@ -1,11 +1,10 @@
+import { Queue } from 'bullmq'
 import fastify from 'fastify'
-import path, { join } from 'path';
 
-const autoload = require('@fastify/autoload')
-
-require('dotenv').config({ path: join(__dirname, '../config.conf') })
+const helmet = require('@fastify/helmet')
 
 const app = fastify({
+  bodyLimit: 1024 * 1024, // 1mb
   logger: {
     transport:
       process.env.NODE_ENV === 'development'
@@ -24,42 +23,55 @@ const app = fastify({
 // Plugins
 app.register(require('@fastify/formbody'))
 app.register(require('@fastify/cors'))
+app.register(
+  helmet,
+  { contentSecurityPolicy: false }
+)
 
 // Rate limit
 app.register(import('@fastify/rate-limit'), {
   global: false,
-  max: 100,
+  max: 50,
   timeWindow: '1 minute'
+})
+
+// Check data owner
+app.register(require('./plugins/check_data_owner'))
+
+app.addHook('onSend', (_request: any, reply: any, _playload: any, done: any) => {
+  reply.headers({
+    'X-Powered-By': 'R7 Health Platform System',
+    'X-Processed-By': process.env.R7PLATFORM_INGR_R7_SERVICE_HOSTNAME || 'dummy-server',
+  });
+
+  done()
+
 })
 
 // JWT
 app.register(require('./plugins/jwt'), {
-  secret: process.env.SECRET_KEY || 'UR6oFDD7mrOcpHruz2U71Xl4FRi1CDGu',
+  secret: process.env.R7PLATFORM_INGR_SECRET_KEY || 'UR6oFDD7mrOcpHruz2U71Xl4FRi1CDGu',
   sign: {
     iss: 'r7.moph.go.th',
-    expiresIn: '1d'
+    expiresIn: '1h'
   },
   messages: {
     badRequestErrorMessage: 'Format is Authorization: Bearer [token]',
     noAuthorizationInHeaderMessage: 'Autorization header is missing!',
     authorizationTokenExpiredMessage: 'Authorization token expired',
-    authorizationTokenInvalid: (err: any) => {
-      return `Authorization token is invalid: ${err.message}`
+    authorizationTokenInvalid: (error: any) => {
+      return `Authorization token is invalid: ${error.message}`
     }
   }
 })
 
 // Queue
-const queueName = process.env.QUEUE_NAME || 'R7QUEUE'
-
-app.register(require('./plugins/bullmq'), {
-  queue_name: queueName,
-  options: {
+app.decorate("createQueue", (zoneName: any) => {
+  const queue = new Queue(zoneName, {
     connection: {
-      host: process.env.REDIS_HOST || 'localhost',
-      port: Number(process.env.REDIS_PORT) || 6379,
-      username: process.env.REDIS_USER || 'admin',
-      password: process.env.REDIS_PASS || 'admin',
+      host: process.env.R7PLATFORM_INGR_REDIS_HOST || 'localhost',
+      port: Number(process.env.R7PLATFORM_INGR_REDIS_PORT) || 6379,
+      password: process.env.R7PLATFORM_INGR_REDIS_PASSWORD || '',
       enableOfflineQueue: false,
     },
     defaultJobOptions: {
@@ -77,12 +89,24 @@ app.register(require('./plugins/bullmq'), {
         age: 2 * 24 * 3600, // keep up to 48 hours
       },
     }
-  }
+  })
+
+  return queue
+
 })
 
 // routes
-app.register(autoload, {
-  dir: path.join(__dirname, 'routes')
-})
+app.register(require("./routes/appoint"))
+app.register(require("./routes/chronic"))
+app.register(require("./routes/drug"))
+app.register(require("./routes/drugallergy"))
+app.register(require("./routes/health_check"))
+app.register(require("./routes/ipd"))
+app.register(require("./routes/ipdx"))
+app.register(require("./routes/ipop"))
+app.register(require("./routes/lab"))
+app.register(require("./routes/opd"))
+app.register(require("./routes/opdx"))
+app.register(require("./routes/person"))
 
-export default app;
+export default app

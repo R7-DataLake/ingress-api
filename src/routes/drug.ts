@@ -1,12 +1,12 @@
-import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
+import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify"
 
 import {
   StatusCodes,
   getReasonPhrase,
-} from 'http-status-codes';
+} from 'http-status-codes'
 
 // โหลด Schema
-import drugSchema from '../schema/drug';
+import drugSchema from '../schema/drug'
 
 export default async (fastify: FastifyInstance) => {
 
@@ -15,24 +15,18 @@ export default async (fastify: FastifyInstance) => {
     // Verify JWT
     onRequest: [fastify.authenticate],
     // Validate schema
-    schema: drugSchema
+    schema: drugSchema,
+    // Check data owner
+    preHandler: fastify.checkowner
   }, async (request: FastifyRequest, reply: FastifyReply) => {
 
     try {
       // Get json from body
-      const data: any = request.body;
-      // Create queue object
-      const queues = data.map((value: any) => {
-        const obj: any = {
-          // Queue name
-          name: "DRUG",
-          // Queue data
-          data: value
-        }
-        return obj;
-      })
+      const data: any = request.body
+      const { ingress_zone } = request.user
+      const queue = fastify.createQueue(ingress_zone)
       // Add queue
-      await fastify.bullmq.addBulk([{ name: "DRUG", data: queues }]);
+      await queue.add("DRUG", data)
       // Reply
       reply
         .status(StatusCodes.OK)
