@@ -1,9 +1,9 @@
-import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
+import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify"
 
 import {
   StatusCodes,
   getReasonPhrase,
-} from 'http-status-codes';
+} from 'http-status-codes'
 
 // โหลด Schema
 import ipdSchema from '../schema/ipd';
@@ -20,17 +20,17 @@ export default async (fastify: FastifyInstance) => {
 
     try {
       // Get json from body
-      const data: any = request.body;
+      const data: any = request.body
       const { ingress_zone } = request.user
       const queue = fastify.createQueue(ingress_zone)
       // Add queue
-      await queue.add("IPD", data);
+      await queue.add("IPD", data)
       // Reply
       reply
         .status(StatusCodes.OK)
         .send(getReasonPhrase(StatusCodes.OK))
-    } catch (error) {
-      request.log.error(error);
+    } catch (error: any) {
+      request.log.error(error)
       reply
         .status(StatusCodes.INTERNAL_SERVER_ERROR)
         .send({ error: getReasonPhrase(StatusCodes.INTERNAL_SERVER_ERROR) })

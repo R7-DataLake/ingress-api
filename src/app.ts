@@ -38,7 +38,7 @@ app.register(import('@fastify/rate-limit'), {
 // Check data owner
 app.register(require('./plugins/check_data_owner'))
 
-app.addHook('onSend', (request: any, reply: any, playload: any, done: any) => {
+app.addHook('onSend', (_request: any, reply: any, _playload: any, done: any) => {
   reply.headers({
     'X-Powered-By': 'R7 Health Platform System',
     'X-Processed-By': process.env.R7PLATFORM_INGR_R7_SERVICE_HOSTNAME || 'dummy-server',
@@ -59,8 +59,8 @@ app.register(require('./plugins/jwt'), {
     badRequestErrorMessage: 'Format is Authorization: Bearer [token]',
     noAuthorizationInHeaderMessage: 'Autorization header is missing!',
     authorizationTokenExpiredMessage: 'Authorization token expired',
-    authorizationTokenInvalid: (err: any) => {
-      return `Authorization token is invalid: ${err.message}`
+    authorizationTokenInvalid: (error: any) => {
+      return `Authorization token is invalid: ${error.message}`
     }
   }
 })

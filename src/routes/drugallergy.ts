@@ -1,12 +1,12 @@
-import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify";
+import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify"
 
 import {
   StatusCodes,
   getReasonPhrase,
-} from 'http-status-codes';
+} from 'http-status-codes'
 
 // โหลด Schema
-import schema from '../schema/drugallergy';
+import schema from '../schema/drugallergy'
 
 export default async (fastify: FastifyInstance) => {
 
@@ -22,17 +22,17 @@ export default async (fastify: FastifyInstance) => {
 
     try {
       // Get json from body
-      const data: any = request.body;
+      const data: any = request.body
       const { ingress_zone } = request.user
       const queue = fastify.createQueue(ingress_zone)
       // Add queue
-      await queue.add("DRUGALLERGY", data);
+      await queue.add("DRUGALLERGY", data)
       // Reply
       reply
         .status(StatusCodes.OK)
         .send(getReasonPhrase(StatusCodes.OK))
-    } catch (error) {
-      request.log.error(error);
+    } catch (error: any) {
+      request.log.error(error)
       reply
         .status(StatusCodes.INTERNAL_SERVER_ERROR)
         .send({ error: getReasonPhrase(StatusCodes.INTERNAL_SERVER_ERROR) })
