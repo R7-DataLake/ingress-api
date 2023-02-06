@@ -14,8 +14,6 @@ export default async (fastify: FastifyInstance) => {
   fastify.post('/ipd', {
     onRequest: [fastify.authenticate],
     schema: ipdSchema,
-    // Check data owner
-    preHandler: fastify.checkowner
   }, async (request: FastifyRequest, reply: FastifyReply) => {
 
     try {
@@ -45,7 +43,7 @@ export default async (fastify: FastifyInstance) => {
       await queue.add("IPD", data)
       reply
         .status(StatusCodes.OK)
-        .send(getReasonPhrase(StatusCodes.OK))
+        .send({ status: 'success' })
     } catch (error: any) {
       request.log.error(error)
       reply

@@ -29,9 +29,6 @@ app.register(import('@fastify/rate-limit'), {
   timeWindow: '1 minute'
 })
 
-// Check data owner
-app.register(require('./plugins/check_data_owner'))
-
 app.addHook('onSend', (_request: any, reply: any, _playload: any, done: any) => {
   reply.headers({
     'X-Powered-By': 'R7 Health Platform System',
