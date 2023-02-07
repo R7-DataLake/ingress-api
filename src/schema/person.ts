@@ -2,7 +2,7 @@ import S from 'fluent-json-schema'
 
 const schema = S.array().minItems(1).maxItems(100).items(
   S.object()
-    .prop('hospcode', S.string().minLength(5).maxLength(5).required())
+    .prop('hospcode', S.string().minLength(5).maxLength(10).required())
     .prop('hn', S.string().maxLength(50).required())
     .prop('cid', S.string().maxLength(13).minLength(13).required())
     .prop('title', S.string().maxLength(30).required())

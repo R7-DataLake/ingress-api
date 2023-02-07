@@ -12,7 +12,8 @@ export default async (fastify: FastifyInstance) => {
     }
   }, async (request: FastifyRequest, reply: FastifyReply) => {
     try {
-      reply.status(StatusCodes.OK).send()
+      reply.status(StatusCodes.OK)
+        .send({ status: 'ok' })
     } catch (error: any) {
       request.log.error(error)
       reply.status(StatusCodes.INTERNAL_SERVER_ERROR).send()

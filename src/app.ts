@@ -1,10 +1,8 @@
 import { Queue } from 'bullmq'
 import fastify from 'fastify'
 
-const helmet = require('@fastify/helmet')
-
 const app = fastify({
-  bodyLimit: 1024 * 1024, // 1mb
+  bodyLimit: 2 * 1024 * 1024, // 2mb
   logger: {
     transport:
       process.env.NODE_ENV === 'development'
@@ -23,10 +21,6 @@ const app = fastify({
 // Plugins
 app.register(require('@fastify/formbody'))
 app.register(require('@fastify/cors'))
-app.register(
-  helmet,
-  { contentSecurityPolicy: false }
-)
 
 // Rate limit
 app.register(import('@fastify/rate-limit'), {
@@ -35,14 +29,11 @@ app.register(import('@fastify/rate-limit'), {
   timeWindow: '1 minute'
 })
 
-// Check data owner
-app.register(require('./plugins/check_data_owner'))
-
 app.addHook('onSend', (_request: any, reply: any, _playload: any, done: any) => {
   reply.headers({
     'X-Powered-By': 'R7 Health Platform System',
-    'X-Processed-By': process.env.R7PLATFORM_INGR_R7_SERVICE_HOSTNAME || 'dummy-server',
-  });
+    'X-Processed-By': process.env.R7PLATFORM_INGR_SERVICE_HOSTNAME || 'dummy-server',
+  })
 
   done()
 
