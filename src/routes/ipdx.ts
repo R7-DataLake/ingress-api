@@ -16,8 +16,6 @@ export default async (fastify: FastifyInstance) => {
     onRequest: [fastify.authenticate],
     // Validate schema
     schema: ipdxSchema,
-    // Check data owner
-    preHandler: fastify.checkowner
   }, async (request: FastifyRequest, reply: FastifyReply) => {
 
     try {
@@ -47,7 +45,7 @@ export default async (fastify: FastifyInstance) => {
       await queue.add("IPDX", data)
       reply
         .status(StatusCodes.OK)
-        .send(getReasonPhrase(StatusCodes.OK))
+        .send({ status: 'success' })
     } catch (error: any) {
       request.log.error(error)
       reply

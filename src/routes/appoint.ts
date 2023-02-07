@@ -14,7 +14,6 @@ export default async (fastify: FastifyInstance) => {
   fastify.post('/appoint', {
     onRequest: [fastify.authenticate],
     schema: appointSchema,
-    preHandler: fastify.checkowner
   }, async (request: FastifyRequest, reply: FastifyReply) => {
 
     try {
@@ -44,7 +43,7 @@ export default async (fastify: FastifyInstance) => {
       await queue.add("APPOINT", data)
       reply
         .status(StatusCodes.OK)
-        .send(getReasonPhrase(StatusCodes.OK))
+        .send({ status: 'success' })
     } catch (error) {
       request.log.error(error);
       reply
