@@ -4,6 +4,10 @@ import {
   StatusCodes,
   getReasonPhrase,
 } from 'http-status-codes'
+import _ from "lodash";
+import { DateTime } from "luxon";
+
+const { v4: uuidv4 } = require('uuid')
 
 // โหลด Schema
 import ipdSchema from '../schema/ipd';
@@ -19,15 +23,38 @@ export default async (fastify: FastifyInstance) => {
     try {
       // Get json from body
       const data: any = request.body
-      const { ingress_zone, hospcode } = request.user
+      const { ingress_zone, hospcode, sub } = request.user
 
       let isError = false
+
+      let metadata: any = []
 
       data.forEach((i: any) => {
         if (i.hospcode !== hospcode) {
           isError = true
         }
-      });
+
+        const dateadm = DateTime.fromFormat(i.dateadm, "yyyyMMdd")
+        const timeadm = DateTime.fromFormat(i.timeadm, "HHmm")
+        const datedsc = DateTime.fromFormat(i.datedsc, "yyyyMMdd")
+        const timedsc = DateTime.fromFormat(i.timedsc, "HHmm")
+        const d_updated = DateTime.fromFormat(i.dUpdate, "yyyyMMddHHmmss")
+
+        const obj: any = {}
+        obj.hospcode = i.hospcode
+        obj.hn = i.hn
+        obj.an = i.an
+        obj.dischs = i.dischs
+        obj.discht = i.discht
+        obj.dateadm = dateadm.toFormat('yyyy-MM-dd')
+        obj.datedsc = datedsc.toFormat('yyyy-MM-dd')
+        obj.timeadm = timeadm.toFormat('HH:mm')
+        obj.timedsc = timedsc.toFormat('HH:mm')
+        obj.d_update = d_updated.toFormat('yyyy-MM-dd HH:mm:ss')
+        obj.ingress_zone = ingress_zone
+        metadata.push(obj)
+
+      })
 
       if (isError) {
         return reply
@@ -37,13 +64,31 @@ export default async (fastify: FastifyInstance) => {
           })
       }
 
-      const queue = fastify.createQueue(ingress_zone)
+      const metaQueue = fastify.createMetaQueue()
+      const ingressQueue = fastify.createIngressQueue(ingress_zone)
+      const logQueue = fastify.createLogQueue()
 
+      const send_date = DateTime.now().toSQL({ includeOffset: false })
+      const trx_id = uuidv4()
       // Add queue
-      await queue.add("IPD", data)
+      await ingressQueue.add("IPD", {
+        trx_id, data, hospcode,
+        ingress_zone, user_id: sub,
+        send_date
+      })
+
+      await metaQueue.add('IPD', { metadata })
+
+      await logQueue.add('INGRESS', {
+        trx_id, hospcode, ingress_zone,
+        user_id: sub, send_date,
+        total_records: _.size(data),
+        file_name: 'IPD'
+      })
+
       reply
         .status(StatusCodes.OK)
-        .send({ status: 'success' })
+        .send({ status: 'success', trx_id, send_date })
     } catch (error: any) {
       request.log.error(error)
       reply

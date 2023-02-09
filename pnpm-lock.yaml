@@ -5,6 +5,8 @@ specifiers:
   '@fastify/formbody': ^7.4.0
   '@fastify/jwt': ^6.5.0
   '@fastify/rate-limit': ^7.6.0
+  '@types/lodash': ^4.14.191
+  '@types/luxon': ^3.2.0
   '@types/node': ^18.11.18
   bullmq: ^3.5.6
   fastify: ^4.11.0
@@ -15,10 +17,13 @@ specifiers:
   gulp-typescript: 6.0.0-alpha.1
   gulp-uglify: ^3.0.2
   http-status-codes: ^2.2.0
+  lodash: ^4.17.21
+  luxon: ^3.2.1
   nodemon: ^2.0.20
   pino: ^8.8.0
   pino-pretty: ^9.1.1
   typescript: ^4.9.4
+  uuid: ^9.0.0
 
 dependencies:
   '@fastify/cors': 8.2.0
@@ -30,10 +35,15 @@ dependencies:
   fastify-plugin: 4.5.0
   fluent-json-schema: 4.0.0
   http-status-codes: 2.2.0
+  lodash: 4.17.21
+  luxon: 3.2.1
   pino: 8.8.0
   pino-pretty: 9.1.1
+  uuid: 9.0.0
 
 devDependencies:
+  '@types/lodash': 4.14.191
+  '@types/luxon': 3.2.0
   '@types/node': 18.11.18
   gulp: 4.0.2
   gulp-cli: 2.3.0
@@ -154,6 +164,14 @@ packages:
     requiresBuild: true
     dev: false
     optional: true
+
+  /@types/lodash/4.14.191:
+    resolution: {integrity: sha512-BdZ5BCCvho3EIXw6wUCXHe7rS53AIDPLE+JzwgT+OsJk53oBfbSmZZ7CX4VaRoN78N+TJpFi9QPlfIVNmJYWxQ==}
+    dev: true
+
+  /@types/luxon/3.2.0:
+    resolution: {integrity: sha512-lGmaGFoaXHuOLXFvuju2bfvZRqxAqkHPx9Y9IQdQABrinJJshJwfNCKV+u7rR3kJbiqfTF/NhOkcxxAFrObyaA==}
+    dev: true
 
   /@types/node/18.11.18:
     resolution: {integrity: sha512-DHQpWGjyQKSHj3ebjFI/wRKcqQcdR+MoFBygntYOZytCqNfkd2ZC4ARDJ2DQqhjH5p85Nnd3jhUJIXrszFX/JA==}

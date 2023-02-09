@@ -57,12 +57,70 @@ app.register(require('./plugins/jwt'), {
 })
 
 // Queue
-app.decorate("createQueue", (zoneName: any) => {
+app.decorate("createIngressQueue", (zoneName: any) => {
   const queue = new Queue(zoneName, {
     connection: {
       host: process.env.R7PLATFORM_INGR_REDIS_HOST || 'localhost',
       port: Number(process.env.R7PLATFORM_INGR_REDIS_PORT) || 6379,
       password: process.env.R7PLATFORM_INGR_REDIS_PASSWORD || '',
+      enableOfflineQueue: false,
+    },
+    defaultJobOptions: {
+      delay: 1000,
+      attempts: 5,
+      backoff: {
+        type: 'exponential',
+        delay: 3000,
+      },
+      removeOnComplete: {
+        age: 3600, // keep up to 1 hour
+        count: 10000, // keep up to 10000 jobs
+      },
+      removeOnFail: {
+        age: 2 * 24 * 3600, // keep up to 48 hours
+      },
+    }
+  })
+
+  return queue
+
+})
+// Metadata Queue
+app.decorate("createMetaQueue", () => {
+  const queue = new Queue('METADATA', {
+    connection: {
+      host: process.env.R7PLATFORM_METADATA_REDIS_HOST || 'localhost',
+      port: Number(process.env.R7PLATFORM_METADATA_REDIS_PORT) || 6379,
+      password: process.env.R7PLATFORM_METADATA_REDIS_PASSWORD || '',
+      enableOfflineQueue: false,
+    },
+    defaultJobOptions: {
+      delay: 1000,
+      attempts: 5,
+      backoff: {
+        type: 'exponential',
+        delay: 3000,
+      },
+      removeOnComplete: {
+        age: 3600, // keep up to 1 hour
+        count: 10000, // keep up to 10000 jobs
+      },
+      removeOnFail: {
+        age: 2 * 24 * 3600, // keep up to 48 hours
+      },
+    }
+  })
+
+  return queue
+
+})
+// Log Queue
+app.decorate("createLogQueue", () => {
+  const queue = new Queue('LOG', {
+    connection: {
+      host: process.env.R7PLATFORM_LOG_REDIS_HOST || 'localhost',
+      port: Number(process.env.R7PLATFORM_LOG_REDIS_PORT) || 6379,
+      password: process.env.R7PLATFORM_LOG_REDIS_PASSWORD || '',
       enableOfflineQueue: false,
     },
     defaultJobOptions: {
