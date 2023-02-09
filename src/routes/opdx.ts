@@ -4,6 +4,7 @@ import {
   StatusCodes,
   getReasonPhrase,
 } from 'http-status-codes'
+import _ from "lodash"
 import { DateTime } from "luxon"
 
 const { v4: uuidv4 } = require('uuid')
@@ -42,16 +43,25 @@ export default async (fastify: FastifyInstance) => {
           })
       }
 
-      const queue = fastify.createQueue(ingress_zone)
+      const ingressQueue = fastify.createIngressQueue(ingress_zone)
+      const logQueue = fastify.createLogQueue()
 
       const send_date = DateTime.now().toSQL({ includeOffset: false })
       const trx_id = uuidv4()
       // Add queue
-      await queue.add("OPDX", {
+      await ingressQueue.add("OPDX", {
         trx_id, data, hospcode,
         ingress_zone, user_id: sub,
         send_date
       })
+
+      await logQueue.add('INGRESS', {
+        trx_id, hospcode, ingress_zone,
+        user_id: sub, send_date,
+        total_records: _.size(data),
+        file_name: 'OPDX'
+      })
+
       reply
         .status(StatusCodes.OK)
         .send({ status: 'success', trx_id, send_date })

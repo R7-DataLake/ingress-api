@@ -4,6 +4,7 @@ import {
   getReasonPhrase,
 } from 'http-status-codes'
 import { DateTime } from "luxon"
+import _ from 'lodash'
 
 const { v4: uuidv4 } = require('uuid')
 
@@ -25,10 +26,28 @@ export default async (fastify: FastifyInstance) => {
 
       let isError = false
 
+      let metadata: any = []
+
       data.forEach((i: any) => {
         if (i.hospcode !== hospcode) {
           isError = true
         }
+
+        const birth = DateTime.fromFormat(i.birth, "yyyyMMdd")
+        const d_updated = DateTime.fromFormat(i.dUpdate, "yyyyMMddHHmmss")
+
+        const obj: any = {}
+        obj.hospcode = i.hospcode
+        obj.hn = i.hn
+        obj.cid = i.cid
+        obj.fname = i.fname
+        obj.lname = i.lname
+        obj.sex = i.sex
+        obj.birth = birth.toFormat('yyyy-MM-dd')
+        obj.d_update = d_updated.toFormat('yyyy-MM-dd HH:mm:ss')
+        obj.ingress_zone = ingress_zone
+
+        metadata.push(obj)
       })
 
       if (isError) {
@@ -39,16 +58,28 @@ export default async (fastify: FastifyInstance) => {
           })
       }
 
-      const queue = fastify.createQueue(ingress_zone)
+      const metaQueue = fastify.createMetaQueue()
+      const logQueue = fastify.createLogQueue()
+      const ingressQueue = fastify.createIngressQueue(ingress_zone)
 
       const send_date = DateTime.now().toSQL({ includeOffset: false })
       const trx_id = uuidv4()
       // Add queue
-      await queue.add("PERSON", {
+      await ingressQueue.add("PERSON", {
         trx_id, data, hospcode,
         ingress_zone, user_id: sub,
         send_date
       })
+
+      await metaQueue.add('PERSON', { metadata })
+
+      await logQueue.add('INGRESS', {
+        trx_id, hospcode, ingress_zone,
+        user_id: sub, send_date,
+        total_records: _.size(data),
+        file_name: 'PERSON'
+      })
+
       reply
         .status(StatusCodes.OK)
         .send({ status: 'success', trx_id, send_date })

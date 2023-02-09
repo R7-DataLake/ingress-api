@@ -18,7 +18,12 @@ export default async (fastify: FastifyInstance) => {
       const now = DateTime.now().toSQL({ includeOffset: false })
       const trx_id = uuidv4()
       reply.status(StatusCodes.OK)
-        .send({ status: 'ok', trx_id, now })
+        .send({
+          status: 'ok',
+          trx_id,
+          now,
+          server_name: process.env.R7PLATFORM_INGR_SERVICE_HOSTNAME || 'DUMMY'
+        })
     } catch (error: any) {
       request.log.error(error)
       reply.status(StatusCodes.INTERNAL_SERVER_ERROR).send()
