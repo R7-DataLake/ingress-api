@@ -26,7 +26,7 @@ export default async (fastify: FastifyInstance) => {
       const { ingress_zone, hospcode, sub } = request.user
 
       let isError = false
-
+      const now = DateTime.now().toSQL({ includeOffset: false })
       let metadata: any = []
 
       data.forEach((i: any) => {
@@ -48,6 +48,9 @@ export default async (fastify: FastifyInstance) => {
         obj.diag_text = i.diagText
         obj.d_update = d_updated.toFormat('yyyy-MM-dd HH:mm:ss')
         obj.ingress_zone = ingress_zone
+        obj.created_at = now
+        obj.updated_at = now
+
         metadata.push(obj)
 
       });
@@ -64,7 +67,6 @@ export default async (fastify: FastifyInstance) => {
       const logQueue = fastify.createLogQueue()
       const ingressQueue = fastify.createIngressQueue(ingress_zone)
 
-      const now = DateTime.now().toSQL({ includeOffset: false })
       const trx_id = uuidv4()
       // Add queue
       await ingressQueue.add("OPD", {
