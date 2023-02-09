@@ -68,27 +68,28 @@ export default async (fastify: FastifyInstance) => {
       const ingressQueue = fastify.createIngressQueue(ingress_zone)
       const logQueue = fastify.createLogQueue()
 
-      const send_date = DateTime.now().toSQL({ includeOffset: false })
+      const now = DateTime.now().toSQL({ includeOffset: false })
       const trx_id = uuidv4()
       // Add queue
       await ingressQueue.add("IPD", {
         trx_id, data, hospcode,
         ingress_zone, user_id: sub,
-        send_date
+        created_at: now
       })
 
       await metaQueue.add('IPD', { metadata })
 
       await logQueue.add('INGRESS', {
         trx_id, hospcode, ingress_zone,
-        user_id: sub, send_date,
+        user_id: sub, created_at: now,
         total_records: _.size(data),
-        file_name: 'IPD'
+        file_name: 'IPD',
+        status: 'sending'
       })
 
       reply
         .status(StatusCodes.OK)
-        .send({ status: 'success', trx_id, send_date })
+        .send({ status: 'success', trx_id })
     } catch (error: any) {
       request.log.error(error)
       reply
