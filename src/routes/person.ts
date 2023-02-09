@@ -1,9 +1,11 @@
 import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify"
-
 import {
   StatusCodes,
   getReasonPhrase,
 } from 'http-status-codes'
+import { DateTime } from "luxon"
+
+const { v4: uuidv4 } = require('uuid')
 
 // โหลด Schema
 import personSchema from '../schema/person'
@@ -19,7 +21,7 @@ export default async (fastify: FastifyInstance) => {
     try {
       // Get json from body
       const data: any = request.body
-      const { ingress_zone, hospcode } = request.user
+      const { ingress_zone, hospcode, sub } = request.user
 
       let isError = false
 
@@ -27,7 +29,7 @@ export default async (fastify: FastifyInstance) => {
         if (i.hospcode !== hospcode) {
           isError = true
         }
-      });
+      })
 
       if (isError) {
         return reply
@@ -39,11 +41,17 @@ export default async (fastify: FastifyInstance) => {
 
       const queue = fastify.createQueue(ingress_zone)
 
+      const send_date = DateTime.now().toSQL({ includeOffset: false })
+      const trx_id = uuidv4()
       // Add queue
-      await queue.add("PERSON", data)
+      await queue.add("PERSON", {
+        trx_id, data, hospcode,
+        ingress_zone, user_id: sub,
+        send_date
+      })
       reply
         .status(StatusCodes.OK)
-        .send({ status: 'success' })
+        .send({ status: 'success', trx_id, send_date })
     } catch (error: any) {
       request.log.error(error)
       reply

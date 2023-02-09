@@ -4,6 +4,9 @@ import {
   StatusCodes,
   getReasonPhrase,
 } from 'http-status-codes'
+import { DateTime } from "luxon"
+
+const { v4: uuidv4 } = require('uuid')
 
 // โหลด Schema
 import chronicSchema from '../schema/chronic'
@@ -21,7 +24,7 @@ export default async (fastify: FastifyInstance) => {
     try {
       // Get json from body
       const data: any = request.body
-      const { ingress_zone, hospcode } = request.user
+      const { ingress_zone, hospcode, sub } = request.user
 
       let isError = false
 
@@ -41,11 +44,17 @@ export default async (fastify: FastifyInstance) => {
 
       const queue = fastify.createQueue(ingress_zone)
 
+      const send_date = DateTime.now().toSQL({ includeOffset: false })
+      const trx_id = uuidv4()
       // Add queue
-      await queue.add("CHRONIC", data)
+      await queue.add("CHRONIC", {
+        trx_id, data, hospcode,
+        ingress_zone, user_id: sub,
+        send_date
+      })
       reply
         .status(StatusCodes.OK)
-        .send({ status: 'success' })
+        .send({ status: 'success', trx_id, send_date })
     } catch (error) {
       request.log.error(error);
       reply
