@@ -11,6 +11,7 @@ const { v4: uuidv4 } = require('uuid')
 
 // โหลด Schema
 import ipdSchema from '../schema/ipd';
+import convertCamelCase from '../utils'
 
 export default async (fastify: FastifyInstance) => {
 
@@ -22,7 +23,9 @@ export default async (fastify: FastifyInstance) => {
 
     try {
       // Get json from body
-      const data: any = request.body
+      const body: any = request.body
+      const data = convertCamelCase.camelizeKeys(body)
+
       const { ingress_zone, hospcode, sub } = request.user
 
       let isError = false
@@ -32,6 +35,7 @@ export default async (fastify: FastifyInstance) => {
       data.forEach((i: any) => {
         if (i.hospcode !== hospcode) {
           isError = true
+          return
         }
 
         const dateadm = DateTime.fromFormat(i.dateadm, "yyyyMMdd")
