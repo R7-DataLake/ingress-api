@@ -10,6 +10,7 @@ const { v4: uuidv4 } = require('uuid')
 
 // โหลด Schema
 import personSchema from '../schema/person'
+import convertCamelCase from '../utils'
 
 export default async (fastify: FastifyInstance) => {
 
@@ -21,16 +22,20 @@ export default async (fastify: FastifyInstance) => {
 
     try {
       // Get json from body
-      const data: any = request.body
+      const body: any = request.body
       const { ingress_zone, hospcode, sub } = request.user
 
       let isError = false
       let metadata: any = []
       const now = DateTime.now().toSQL({ includeOffset: false })
 
+      // convert keys
+      const data = convertCamelCase.camelizeKeys(body)
+
       data.forEach((i: any) => {
         if (i.hospcode !== hospcode) {
           isError = true
+          return
         }
 
         const birth = DateTime.fromFormat(i.birth, "yyyyMMdd")

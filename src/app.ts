@@ -1,5 +1,6 @@
 import { Queue } from 'bullmq'
 import fastify from 'fastify'
+import { camelCase } from 'lodash';
 
 const app = fastify({
   bodyLimit: 2 * 1024 * 1024, // 2mb

@@ -11,6 +11,7 @@ const { v4: uuidv4 } = require('uuid')
 
 // โหลด Schema
 import opopSchema from '../schema/opop'
+import convertCamelCase from '../utils'
 
 export default async (fastify: FastifyInstance) => {
 
@@ -22,16 +23,20 @@ export default async (fastify: FastifyInstance) => {
 
     try {
       // Get json from body
-      const data: any = request.body
+      const body: any = request.body
       const { ingress_zone, hospcode, sub } = request.user
+
+      // convert keys
+      const data = convertCamelCase.camelizeKeys(body)
 
       let isError = false
 
       data.forEach((i: any) => {
         if (i.hospcode !== hospcode) {
           isError = true
+          return
         }
-      });
+      })
 
       if (isError) {
         return reply
