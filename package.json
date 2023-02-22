@@ -13,9 +13,9 @@
   "dependencies": {
     "@fastify/cors": "^8.2.0",
     "@fastify/formbody": "^7.4.0",
-    "@fastify/jwt": "^6.5.0",
+    "@fastify/jwt": "^6.6.0",
     "@fastify/rate-limit": "^7.6.0",
-    "bullmq": "^3.7.0",
+    "bullmq": "^3.7.1",
     "fastify": "^4.13.0",
     "fastify-plugin": "^4.5.0",
     "fluent-json-schema": "^4.1.0",
@@ -23,13 +23,13 @@
     "lodash": "^4.17.21",
     "luxon": "^3.2.1",
     "pino": "^8.10.0",
-    "pino-pretty": "^9.2.0",
+    "pino-pretty": "^9.3.0",
     "uuid": "^9.0.0"
   },
   "devDependencies": {
     "@types/lodash": "^4.14.191",
     "@types/luxon": "^3.2.0",
-    "@types/node": "^18.13.0",
+    "@types/node": "^18.14.0",
     "gulp": "^4.0.2",
     "gulp-cli": "^2.3.0",
     "gulp-typescript": "6.0.0-alpha.1",
