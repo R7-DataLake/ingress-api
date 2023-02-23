@@ -77,21 +77,24 @@ export default async (fastify: FastifyInstance) => {
 
       const trx_id = uuidv4()
       // Add queue
-      await ingressQueue.add("IPD", {
+      const ingressData: any = {
+        file_name: 'IPD',
         trx_id, data, hospcode,
         ingress_zone, user_id: sub,
         created_at: now
-      })
+      }
+      await ingressQueue.add("IPD", ingressData)
 
       await metaQueue.add('IPD', { metadata })
 
-      await logQueue.add('INGRESS', {
+      const logData: any = {
         trx_id, hospcode, ingress_zone,
         user_id: sub, created_at: now,
         total_records: _.size(data),
         file_name: 'IPD',
         status: 'sending'
-      })
+      }
+      await logQueue.add('INGRESS', logData)
 
       reply
         .status(StatusCodes.OK)
