@@ -53,19 +53,22 @@ export default async (fastify: FastifyInstance) => {
       const now = DateTime.now().toSQL({ includeOffset: false })
       const trx_id = uuidv4()
       // Add queue
-      await ingressQueue.add("CHRONIC", {
+      const ingressData: any = {
+        file_name: 'CHRONIC',
         trx_id, data, hospcode,
         ingress_zone, user_id: sub,
         created_at: now
-      })
+      }
+      await ingressQueue.add("CHRONIC", ingressData)
 
-      await logQueue.add('INGRESS', {
+      const logData: any = {
         trx_id, hospcode, ingress_zone,
         user_id: sub, created_at: now,
         total_records: _.size(data),
         file_name: 'CHRONIC',
         status: 'sending'
-      })
+      }
+      await logQueue.add('INGRESS', logData)
 
       reply
         .status(StatusCodes.OK)
