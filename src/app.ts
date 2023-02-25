@@ -40,21 +40,10 @@ app.addHook('onSend', (_request: any, reply: any, _playload: any, done: any) => 
 
 })
 
-// JWT
-app.register(require('./plugins/jwt'), {
-  secret: process.env.R7PLATFORM_INGR_SECRET_KEY || 'UR6oFDD7mrOcpHruz2U71Xl4FRi1CDGu',
-  sign: {
-    iss: 'r7.moph.go.th',
-    expiresIn: '1h'
-  },
-  messages: {
-    badRequestErrorMessage: 'Format is Authorization: Bearer [token]',
-    noAuthorizationInHeaderMessage: 'Autorization header is missing!',
-    authorizationTokenExpiredMessage: 'Authorization token expired',
-    authorizationTokenInvalid: (error: any) => {
-      return `Authorization token is invalid: ${error.message}`
-    }
-  }
+app.addHook('onRequest', (request, reply, done) => {
+  const accessToken = request.headers.authorization?.split(' ')[1];
+  request.accessToken = accessToken;
+  done()
 })
 
 // Queue
@@ -75,7 +64,7 @@ app.decorate("createIngressQueue", (zoneName: any) => {
       },
       removeOnComplete: {
         age: 3600, // keep up to 1 hour
-        count: 10000, // keep up to 10000 jobs
+        count: 1000, // keep up to 10000 jobs
       },
       removeOnFail: {
         age: 2 * 24 * 3600, // keep up to 48 hours
@@ -86,6 +75,7 @@ app.decorate("createIngressQueue", (zoneName: any) => {
   return queue
 
 })
+
 // Metadata Queue
 app.decorate("createMetaQueue", () => {
   const queue = new Queue('METADATA', {
@@ -104,7 +94,7 @@ app.decorate("createMetaQueue", () => {
       },
       removeOnComplete: {
         age: 3600, // keep up to 1 hour
-        count: 10000, // keep up to 10000 jobs
+        count: 1000, // keep up to 10000 jobs
       },
       removeOnFail: {
         age: 2 * 24 * 3600, // keep up to 48 hours
@@ -115,6 +105,7 @@ app.decorate("createMetaQueue", () => {
   return queue
 
 })
+
 // Log Queue
 app.decorate("createLogQueue", () => {
   const queue = new Queue('LOG', {
@@ -133,7 +124,7 @@ app.decorate("createLogQueue", () => {
       },
       removeOnComplete: {
         age: 3600, // keep up to 1 hour
-        count: 10000, // keep up to 10000 jobs
+        count: 1000, // keep up to 10000 jobs
       },
       removeOnFail: {
         age: 2 * 24 * 3600, // keep up to 48 hours
@@ -143,6 +134,12 @@ app.decorate("createLogQueue", () => {
 
   return queue
 
+})
+
+app.register(require('@fastify/circuit-breaker'), {});
+
+app.register(require('fastify-axios'), {
+  timeout: 10000
 })
 
 // routes
