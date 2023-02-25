@@ -136,15 +136,12 @@ app.decorate("createLogQueue", () => {
 
 })
 
+app.register(require('@fastify/circuit-breaker'), {});
+
 app.register(require('fastify-axios'), {
   timeout: 10000
 })
 
-app.register(require('@fastify/circuit-breaker'), {
-  threshold: 3,
-  timeout: 5000,
-  resetTimeout: 5000,
-});
 
 // routes
 app.register(require("./routes/appoint"))
