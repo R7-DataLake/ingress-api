@@ -10,6 +10,10 @@ const schema = S.array().minItems(1).maxItems(100).items(
     .prop('D_UPDATE', S.string().maxLength(14).minLength(14).required())
 )
 
+const headerSchema = S.object()
+  .prop('Authorization', S.string().required())
+
 export default {
-  body: schema
+  body: schema,
+  headers: headerSchema
 }
