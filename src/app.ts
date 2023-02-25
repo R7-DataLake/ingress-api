@@ -142,7 +142,6 @@ app.register(require('fastify-axios'), {
   timeout: 10000
 })
 
-
 // routes
 app.register(require("./routes/appoint"))
 app.register(require("./routes/chronic"))
