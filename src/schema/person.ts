@@ -18,7 +18,7 @@ const schema = S.array().minItems(1).maxItems(100).items(
     .prop('AMPHUR', S.string().maxLength(2).minLength(2).required())
     .prop('TAMBOL', S.string().maxLength(2).required())
     .prop('MOO', S.string().maxLength(3).required())
-    .prop('TYPEAREA', S.enum(['1', '2', '3', '4', '5']).required())
+    .prop('TYPEAREA', S.enum(['0', '1', '2', '3', '4', '5']).required())
     .prop('D_UPDATE', S.string().maxLength(14).minLength(14).required())
 )
 
