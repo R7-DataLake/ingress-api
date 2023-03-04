@@ -132,10 +132,10 @@ app.decorate("createLogQueue", () => {
 
 })
 
-app.register(require('@fastify/circuit-breaker'), {});
+// app.register(require('@fastify/circuit-breaker'), {});
 
 app.register(require('fastify-axios'), {
-  timeout: 10000
+  timeout: 60000
 })
 
 // routes

@@ -18,7 +18,6 @@ export default async (fastify: FastifyInstance, _opts: any, _next: any) => {
     method: 'POST',
     url: '/person',
     schema: schema,
-    preHandler: fastify.circuitBreaker(),
     handler: async (request: FastifyRequest, reply: FastifyReply) => {
       try {
         const accessToken: any = request.accessToken;
@@ -71,7 +70,9 @@ export default async (fastify: FastifyInstance, _opts: any, _next: any) => {
           return reply
             .status(StatusCodes.BAD_REQUEST)
             .send({
-              error: 'This information is not your organization'
+              error: getReasonPhrase(StatusCodes.BAD_REQUEST),
+              message: 'ไม่ใช่ข้อมูลของหน่วยงาน',
+              statusCode: StatusCodes.BAD_REQUEST
             })
         }
 

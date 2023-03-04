@@ -13,7 +13,7 @@ const schema = S.array().minItems(1).maxItems(100).items(
     .prop('MARRIAGE', S.enum(['1', '2', '3', '4', '5', '6', '9']).required())
     .prop('OCCUPATION', S.string().required())
     .prop('NATION', S.string().required())
-    .prop('IDTYPE', S.enum(['1', '2', '3', '4', '5']).required())
+    .prop('IDTYPE', S.enum(['1', '2', '3', '4', '5']))
     .prop('CHANGWAT', S.string().maxLength(2).minLength(2).required())
     .prop('AMPHUR', S.string().maxLength(2).minLength(2).required())
     .prop('TAMBOL', S.string().maxLength(2).required())
