@@ -149,6 +149,7 @@ app.register(require("./routes/ipdx"))
 app.register(require("./routes/ipop"))
 app.register(require("./routes/lab"))
 app.register(require("./routes/opd"))
+app.register(require("./routes/opop"))
 app.register(require("./routes/opdx"))
 app.register(require("./routes/person"))
 
