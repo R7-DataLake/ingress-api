@@ -1,6 +1,5 @@
 import { Queue } from 'bullmq'
 import fastify from 'fastify'
-import { camelCase } from 'lodash';
 
 const app = fastify({
   bodyLimit: 2 * 1024 * 1024, // 2mb
@@ -64,7 +63,6 @@ app.decorate("createIngressQueue", (zoneName: any) => {
       },
       removeOnComplete: {
         age: 3600, // keep up to 1 hour
-        count: 1000, // keep up to 10000 jobs
       },
       removeOnFail: {
         age: 2 * 24 * 3600, // keep up to 48 hours
@@ -94,7 +92,6 @@ app.decorate("createMetaQueue", () => {
       },
       removeOnComplete: {
         age: 3600, // keep up to 1 hour
-        count: 1000, // keep up to 10000 jobs
       },
       removeOnFail: {
         age: 2 * 24 * 3600, // keep up to 48 hours
@@ -124,7 +121,6 @@ app.decorate("createLogQueue", () => {
       },
       removeOnComplete: {
         age: 3600, // keep up to 1 hour
-        count: 1000, // keep up to 10000 jobs
       },
       removeOnFail: {
         age: 2 * 24 * 3600, // keep up to 48 hours
