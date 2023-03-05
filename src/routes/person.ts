@@ -89,10 +89,6 @@ export default async (fastify: FastifyInstance, _opts: any, _next: any) => {
           created_at: now
         }
 
-        await ingressQueue.add("PERSON", ingressData)
-
-        await metaQueue.add('PERSON', { metadata })
-
         const logData: any = {
           trx_id, hospcode, ingress_zone,
           user_id: sub, created_at: now,
@@ -101,19 +97,28 @@ export default async (fastify: FastifyInstance, _opts: any, _next: any) => {
           status: 'sending'
         }
 
+        await ingressQueue.add("PERSON", ingressData)
+        await metaQueue.add('PERSON', { metadata })
         await logQueue.add('INGRESS', logData)
 
         reply
           .status(StatusCodes.OK)
-          .send({ status: 'success', trx_id })
+          .send({ status: 'success', trx_id });
       } catch (error: any) {
-        request.log.error(error)
+        request.log.error(error);
+        let message: any;
+        if (_.has(error, 'message')) {
+          message = error.message;
+        } else {
+          message = getReasonPhrase(StatusCodes.INTERNAL_SERVER_ERROR);
+        }
         reply
           .status(StatusCodes.INTERNAL_SERVER_ERROR)
           .send({
             status: 'error',
-            error: error.message
-          })
+            error: message,
+            statusCode: StatusCodes.INTERNAL_SERVER_ERROR
+          });
       }
     }
   })

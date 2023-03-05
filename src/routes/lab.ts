@@ -35,7 +35,6 @@ export default async (fastify: FastifyInstance) => {
 
         // Get json from body
         const body: any = request.body;
-
         const data = convertCamelCase.camelizeKeys(body)
 
         let isError = false
@@ -69,7 +68,6 @@ export default async (fastify: FastifyInstance) => {
           ingress_zone, user_id: sub,
           created_at: now
         }
-        await ingressQueue.add("LAB", ingressData)
 
         const logData: any = {
           trx_id, hospcode, ingress_zone,
@@ -78,16 +76,28 @@ export default async (fastify: FastifyInstance) => {
           file_name: 'LAB',
           status: 'sending'
         }
+
+        await ingressQueue.add("LAB", ingressData)
         await logQueue.add('INGRESS', logData)
 
         reply
           .status(StatusCodes.OK)
           .send({ status: 'success', trx_id })
       } catch (error: any) {
-        request.log.error(error)
+        request.log.error(error);
+        let message: any;
+        if (_.has(error, 'message')) {
+          message = error.message;
+        } else {
+          message = getReasonPhrase(StatusCodes.INTERNAL_SERVER_ERROR);
+        }
         reply
           .status(StatusCodes.INTERNAL_SERVER_ERROR)
-          .send({ error: getReasonPhrase(StatusCodes.INTERNAL_SERVER_ERROR) })
+          .send({
+            status: 'error',
+            error: message,
+            statusCode: StatusCodes.INTERNAL_SERVER_ERROR
+          });
       }
     }
   })
