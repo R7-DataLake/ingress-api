@@ -18,7 +18,6 @@ export default async (fastify: FastifyInstance, _opts: any, _next: any) => {
     method: 'POST',
     url: '/person',
     schema: schema,
-    preHandler: fastify.circuitBreaker(),
     handler: async (request: FastifyRequest, reply: FastifyReply) => {
       try {
         const accessToken: any = request.accessToken;
@@ -71,7 +70,9 @@ export default async (fastify: FastifyInstance, _opts: any, _next: any) => {
           return reply
             .status(StatusCodes.BAD_REQUEST)
             .send({
-              error: 'This information is not your organization'
+              error: getReasonPhrase(StatusCodes.BAD_REQUEST),
+              message: 'ไม่ใช่ข้อมูลของหน่วยงาน',
+              statusCode: StatusCodes.BAD_REQUEST
             })
         }
 
@@ -88,10 +89,6 @@ export default async (fastify: FastifyInstance, _opts: any, _next: any) => {
           created_at: now
         }
 
-        await ingressQueue.add("PERSON", ingressData)
-
-        await metaQueue.add('PERSON', { metadata })
-
         const logData: any = {
           trx_id, hospcode, ingress_zone,
           user_id: sub, created_at: now,
@@ -100,19 +97,28 @@ export default async (fastify: FastifyInstance, _opts: any, _next: any) => {
           status: 'sending'
         }
 
+        await ingressQueue.add("PERSON", ingressData)
+        await metaQueue.add('PERSON', { metadata })
         await logQueue.add('INGRESS', logData)
 
         reply
           .status(StatusCodes.OK)
-          .send({ status: 'success', trx_id })
+          .send({ status: 'success', trx_id });
       } catch (error: any) {
-        request.log.error(error)
+        request.log.error(error);
+        let message: any;
+        if (_.has(error, 'message')) {
+          message = error.message;
+        } else {
+          message = getReasonPhrase(StatusCodes.INTERNAL_SERVER_ERROR);
+        }
         reply
           .status(StatusCodes.INTERNAL_SERVER_ERROR)
           .send({
             status: 'error',
-            error: error.message
-          })
+            error: message,
+            statusCode: StatusCodes.INTERNAL_SERVER_ERROR
+          });
       }
     }
   })

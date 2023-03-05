@@ -1,5 +1,6 @@
 import { FastifyInstance, FastifyReply, FastifyRequest } from "fastify"
-import { StatusCodes } from "http-status-codes"
+import { getReasonPhrase, StatusCodes } from "http-status-codes"
+import _ from "lodash"
 import { DateTime } from "luxon"
 
 export default async (fastify: FastifyInstance) => {
@@ -21,8 +22,20 @@ export default async (fastify: FastifyInstance) => {
           server_name: process.env.R7PLATFORM_INGR_SERVICE_HOSTNAME || 'DUMMY'
         })
     } catch (error: any) {
-      request.log.error(error)
-      reply.status(StatusCodes.INTERNAL_SERVER_ERROR).send()
+      request.log.error(error);
+      let message: any;
+      if (_.has(error, 'message')) {
+        message = error.message;
+      } else {
+        message = getReasonPhrase(StatusCodes.INTERNAL_SERVER_ERROR);
+      }
+      reply
+        .status(StatusCodes.INTERNAL_SERVER_ERROR)
+        .send({
+          status: 'error',
+          error: message,
+          statusCode: StatusCodes.INTERNAL_SERVER_ERROR
+        });
     }
   })
 

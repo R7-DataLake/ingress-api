@@ -20,7 +20,6 @@ export default async (fastify: FastifyInstance) => {
     method: 'POST',
     url: '/chronic',
     schema: schema,
-    preHandler: fastify.circuitBreaker(),
     handler: async (request: FastifyRequest, reply: FastifyReply) => {
       try {
         const accessToken: any = request.accessToken;
@@ -36,7 +35,6 @@ export default async (fastify: FastifyInstance) => {
 
         // Get json from body
         const body: any = request.body;
-
         const data = convertCamelCase.camelizeKeys(body)
 
         let isError = false
@@ -52,7 +50,9 @@ export default async (fastify: FastifyInstance) => {
           return reply
             .status(StatusCodes.BAD_REQUEST)
             .send({
-              error: 'This information is not your organization'
+              error: getReasonPhrase(StatusCodes.BAD_REQUEST),
+              message: 'ไม่ใช่ข้อมูลของหน่วยงาน',
+              statusCode: StatusCodes.BAD_REQUEST
             })
         }
 
@@ -68,7 +68,6 @@ export default async (fastify: FastifyInstance) => {
           ingress_zone, user_id: sub,
           created_at: now
         }
-        await ingressQueue.add("CHRONIC", ingressData)
 
         const logData: any = {
           trx_id, hospcode, ingress_zone,
@@ -77,16 +76,28 @@ export default async (fastify: FastifyInstance) => {
           file_name: 'CHRONIC',
           status: 'sending'
         }
+
+        await ingressQueue.add("CHRONIC", ingressData)
         await logQueue.add('INGRESS', logData)
 
         reply
           .status(StatusCodes.OK)
           .send({ status: 'success', trx_id })
-      } catch (error) {
+      } catch (error: any) {
         request.log.error(error);
+        let message: any;
+        if (_.has(error, 'message')) {
+          message = error.message;
+        } else {
+          message = getReasonPhrase(StatusCodes.INTERNAL_SERVER_ERROR);
+        }
         reply
           .status(StatusCodes.INTERNAL_SERVER_ERROR)
-          .send({ error: getReasonPhrase(StatusCodes.INTERNAL_SERVER_ERROR) })
+          .send({
+            status: 'error',
+            error: message,
+            statusCode: StatusCodes.INTERNAL_SERVER_ERROR
+          });
       }
     }
   })
