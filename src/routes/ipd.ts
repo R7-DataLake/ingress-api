@@ -47,9 +47,7 @@ export default async (fastify: FastifyInstance) => {
           }
 
           const dateadm = DateTime.fromFormat(i.dateadm, "yyyyMMdd")
-          const timeadm = DateTime.fromFormat(i.timeadm, "HHmm")
           const datedsc = DateTime.fromFormat(i.datedsc, "yyyyMMdd")
-          const timedsc = DateTime.fromFormat(i.timedsc, "HHmm")
           const d_updated = DateTime.fromFormat(i.dUpdate, "yyyyMMddHHmmss")
 
           const obj: any = {}
@@ -60,8 +58,8 @@ export default async (fastify: FastifyInstance) => {
           obj.discht = i.discht
           obj.dateadm = dateadm.toFormat('yyyy-MM-dd')
           obj.datedsc = datedsc.toFormat('yyyy-MM-dd')
-          obj.timeadm = timeadm.toFormat('HH:mm')
-          obj.timedsc = timedsc.toFormat('HH:mm')
+          obj.timeadm = i.timeadm
+          obj.timedsc = i.timedsc
           obj.d_update = d_updated.toFormat('yyyy-MM-dd HH:mm:ss')
           obj.ingress_zone = ingress_zone
           obj.created_at = now

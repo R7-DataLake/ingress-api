@@ -13,7 +13,7 @@ const schema = S.array().minItems(1).maxItems(100).items(
     .prop('DISCHT', S.enum(['1', '2', '3', '4', '5', '8', '9']).required())
     .prop('DEPT', S.string().maxLength(6).required())
     .prop('WARDDSC', S.string().maxLength(6))
-    .prop('ADM_W', S.number().default(0))
+    .prop('ADM_W', S.number().default(0).maximum(900000))
     .prop('D_UPDATE', S.string().maxLength(14).minLength(14).required())
 )
 
