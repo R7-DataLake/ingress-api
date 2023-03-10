@@ -11,16 +11,17 @@ import { DateTime } from "luxon"
 const { v4: uuidv4 } = require('uuid')
 
 // โหลด Schema
-import schema from '../schema/opdx'
+import schema from '../schema/ipdrug'
 import convertCamelCase from '../utils'
 
 export default async (fastify: FastifyInstance) => {
 
   fastify.route({
     method: 'POST',
-    url: '/opdx',
+    url: '/ipdrug',
     schema: schema,
     handler: async (request: FastifyRequest, reply: FastifyReply) => {
+
       try {
         const accessToken: any = request.accessToken;
         // Verify token
@@ -35,7 +36,6 @@ export default async (fastify: FastifyInstance) => {
 
         // Get json from body
         const body: any = request.body;
-        // convert keys
         const data = convertCamelCase.camelizeKeys(body)
 
         let isError = false
@@ -64,7 +64,7 @@ export default async (fastify: FastifyInstance) => {
         const trx_id = uuidv4()
         // Add queue
         const ingressData: any = {
-          file_name: 'OPDX',
+          file_name: 'IPDRUG',
           trx_id, data, hospcode,
           ingress_zone, user_id: sub,
           created_at: now
@@ -74,11 +74,11 @@ export default async (fastify: FastifyInstance) => {
           trx_id, hospcode, ingress_zone,
           user_id: sub, created_at: now,
           total_records: _.size(data),
-          file_name: 'OPDX',
-          status: 'sending',
+          file_name: 'IPDRUG',
+          status: 'sending'
         }
 
-        await ingressQueue.add("OPDX", ingressData);
+        await ingressQueue.add("IPDRUG", ingressData)
         await logQueue.add('INGRESS', logData)
 
         reply
