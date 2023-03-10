@@ -141,7 +141,8 @@ app.register(require('fastify-axios'), {
 // routes
 app.register(require("./routes/appoint"))
 app.register(require("./routes/chronic"))
-app.register(require("./routes/drug"))
+app.register(require("./routes/opdrug"))
+app.register(require("./routes/ipdrug"))
 app.register(require("./routes/drugallergy"))
 app.register(require("./routes/health_check"))
 app.register(require("./routes/ipd"))
