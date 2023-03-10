@@ -11,14 +11,14 @@ import { DateTime } from "luxon"
 const { v4: uuidv4 } = require('uuid')
 
 // โหลด Schema
-import schema from '../schema/opddrug'
+import schema from '../schema/opdrug'
 import convertCamelCase from '../utils'
 
 export default async (fastify: FastifyInstance) => {
 
   fastify.route({
     method: 'POST',
-    url: '/opddrug',
+    url: '/opdrug',
     schema: schema,
     handler: async (request: FastifyRequest, reply: FastifyReply) => {
 
@@ -64,7 +64,7 @@ export default async (fastify: FastifyInstance) => {
         const trx_id = uuidv4()
         // Add queue
         const ingressData: any = {
-          file_name: 'OPDDRUG',
+          file_name: 'OPDRUG',
           trx_id, data, hospcode,
           ingress_zone, user_id: sub,
           created_at: now
@@ -74,11 +74,11 @@ export default async (fastify: FastifyInstance) => {
           trx_id, hospcode, ingress_zone,
           user_id: sub, created_at: now,
           total_records: _.size(data),
-          file_name: 'OPDDRUG',
+          file_name: 'OPDRUG',
           status: 'sending'
         }
 
-        await ingressQueue.add("OPDDRUG", ingressData)
+        await ingressQueue.add("OPDRUG", ingressData)
         await logQueue.add('INGRESS', logData)
 
         reply
