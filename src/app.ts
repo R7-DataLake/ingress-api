@@ -52,7 +52,11 @@ app.decorate("createIngressQueue", (zoneName: any) => {
       host: process.env.R7PLATFORM_INGR_REDIS_HOST || 'localhost',
       port: Number(process.env.R7PLATFORM_INGR_REDIS_PORT) || 6379,
       password: process.env.R7PLATFORM_INGR_REDIS_PASSWORD || '',
-      enableOfflineQueue: false,
+      enableOfflineQueue: true,
+      retryStrategy(times: any) {
+        const delay = Math.min(times * 50, 2000);
+        return delay;
+      },
     },
     defaultJobOptions: {
       delay: 1000,
@@ -81,7 +85,7 @@ app.decorate("createMetaQueue", () => {
       host: process.env.R7PLATFORM_METADATA_REDIS_HOST || 'localhost',
       port: Number(process.env.R7PLATFORM_METADATA_REDIS_PORT) || 6379,
       password: process.env.R7PLATFORM_METADATA_REDIS_PASSWORD || '',
-      enableOfflineQueue: false,
+      enableOfflineQueue: true,
     },
     defaultJobOptions: {
       delay: 1000,
@@ -110,7 +114,7 @@ app.decorate("createLogQueue", () => {
       host: process.env.R7PLATFORM_LOG_REDIS_HOST || 'localhost',
       port: Number(process.env.R7PLATFORM_LOG_REDIS_PORT) || 6379,
       password: process.env.R7PLATFORM_LOG_REDIS_PASSWORD || '',
-      enableOfflineQueue: false,
+      enableOfflineQueue: true,
     },
     defaultJobOptions: {
       delay: 1000,
