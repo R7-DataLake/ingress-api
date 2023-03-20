@@ -107,6 +107,35 @@ app.decorate("createMetaQueue", () => {
 
 })
 
+// Health profile Queue
+app.decorate("createHealthProfileQueue", () => {
+  const queue = new Queue('HEALTH_PROFILE', {
+    connection: {
+      host: process.env.R7PLATFORM_METADATA_REDIS_HOST || 'localhost',
+      port: Number(process.env.R7PLATFORM_METADATA_REDIS_PORT) || 6379,
+      password: process.env.R7PLATFORM_METADATA_REDIS_PASSWORD || '',
+      enableOfflineQueue: true,
+    },
+    defaultJobOptions: {
+      delay: 1000,
+      attempts: 5,
+      backoff: {
+        type: 'exponential',
+        delay: 3000,
+      },
+      removeOnComplete: {
+        age: 3600, // keep up to 1 hour
+      },
+      removeOnFail: {
+        age: 2 * 24 * 3600, // keep up to 48 hours
+      },
+    }
+  })
+
+  return queue
+
+})
+
 // Log Queue
 app.decorate("createLogQueue", () => {
   const queue = new Queue('LOG', {

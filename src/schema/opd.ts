@@ -14,6 +14,8 @@ const schema = S.array().minItems(1).maxItems(500).items(
     .prop('DBP', S.number().maximum(999))
     .prop('PR', S.number().maximum(999))
     .prop('RR', S.number().maximum(999))
+    .prop('HEIGHT', S.number().maximum(999))
+    .prop('WEIGHT', S.number().maximum(999))
     .prop('TYPEIN', S.string().maxLength(50).required())
     .prop('TYPEOUT', S.string().maxLength(50).required())
     .prop('INS_TYPE', S.string().maxLength(50).required())
