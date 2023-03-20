@@ -1,6 +1,6 @@
 import S from 'fluent-json-schema'
 
-const schema = S.array().minItems(1).maxItems(100).items(
+const schema = S.array().minItems(1).maxItems(500).items(
   S.object()
     .prop('HOSPCODE', S.string().maxLength(10).required())
     .prop('HN', S.string().maxLength(50).required())
@@ -9,11 +9,13 @@ const schema = S.array().minItems(1).maxItems(100).items(
     .prop('TIME_SERV', S.string().maxLength(6).minLength(6).required())
     .prop('SEQ', S.string().maxLength(15).required())
     .prop('CHIEFCOMP', S.string().maxLength(255).required())
-    .prop('BTEMP', S.number().maximum(100))
-    .prop('SBP', S.number().maximum(600))
-    .prop('DBP', S.number().maximum(200))
-    .prop('PR', S.number().maximum(200))
-    .prop('RR', S.number().maximum(200))
+    .prop('BTEMP', S.number().maximum(999))
+    .prop('SBP', S.number().maximum(999))
+    .prop('DBP', S.number().maximum(999))
+    .prop('PR', S.number().maximum(999))
+    .prop('RR', S.number().maximum(999))
+    .prop('HEIGHT', S.number().maximum(999))
+    .prop('WEIGHT', S.number().maximum(999))
     .prop('TYPEIN', S.string().maxLength(50).required())
     .prop('TYPEOUT', S.string().maxLength(50).required())
     .prop('INS_TYPE', S.string().maxLength(50).required())

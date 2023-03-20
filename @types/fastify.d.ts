@@ -7,7 +7,7 @@ declare module 'fastify' {
     createIngressQueue(string): any
     createMetaQueue(): any
     createLogQueue(): any
-    circuitBreaker(): any
+    createHealthProfileQueue(): any
   }
 
   interface FastifyRequest {

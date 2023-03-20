@@ -1,6 +1,6 @@
 import S from 'fluent-json-schema'
 
-const schema = S.array().minItems(1).maxItems(100).items(
+const schema = S.array().minItems(1).maxItems(500).items(
   S.object()
     .prop('HOSPCODE', S.string().minLength(5).maxLength(10).required())
     .prop('HN', S.string().maxLength(50).required())
@@ -10,7 +10,7 @@ const schema = S.array().minItems(1).maxItems(100).items(
     .prop('LNAME', S.string().maxLength(100).required())
     .prop('BIRTH', S.string().minLength(8).maxLength(8).required())
     .prop('SEX', S.enum(['1', '2']).required())
-    .prop('MARRIAGE', S.enum(['1', '2', '3', '4', '5', '6', '9']).required())
+    .prop('MARRIAGE', S.string())
     .prop('OCCUPATION', S.string().required())
     .prop('NATION', S.string().required())
     .prop('IDTYPE', S.enum(['1', '2', '3', '4', '5']))

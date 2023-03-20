@@ -19,7 +19,9 @@ export default async (fastify: FastifyInstance) => {
         .send({
           status: 'ok',
           now,
-          server_name: process.env.R7PLATFORM_INGR_SERVICE_HOSTNAME || 'DUMMY'
+          server_name: process.env.R7PLATFORM_INGR_SERVICE_HOSTNAME || 'DUMMY',
+          version: '1.0.1',
+          build: '202303102135'
         })
     } catch (error: any) {
       request.log.error(error);

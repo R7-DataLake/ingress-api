@@ -1,6 +1,6 @@
 import S from 'fluent-json-schema'
 
-const schema = S.array().minItems(1).maxItems(100).items(
+const schema = S.array().minItems(1).maxItems(500).items(
   S.object()
     .prop('HOSPCODE', S.string().minLength(5).maxLength(10).required())
     .prop('INFORMHOSP', S.string().minLength(5).maxLength(5).required())
