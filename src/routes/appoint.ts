@@ -38,6 +38,8 @@ export default async (fastify: FastifyInstance) => {
         const body: any = request.body;
         const data = convertCamelCase.camelizeKeys(body)
 
+        const now = DateTime.now().toSQL({ includeOffset: false })
+
         let appoint: any = []
 
         let isError = false
@@ -78,7 +80,6 @@ export default async (fastify: FastifyInstance) => {
         const healthProfileQueue = fastify.createHealthProfileQueue()
         const logQueue = fastify.createLogQueue()
 
-        const now = DateTime.now().toSQL({ includeOffset: false })
         const trx_id = uuidv4()
         // Add queue
         const ingressData: any = {
