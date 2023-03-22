@@ -38,6 +38,7 @@ export default async (fastify: FastifyInstance) => {
         let isError = false
         const now = DateTime.now().toSQL({ includeOffset: false })
         let metadata: any = []
+        let screening: any = []
 
         // convert keys
         const data = convertCamelCase.camelizeKeys(body)
@@ -52,20 +53,35 @@ export default async (fastify: FastifyInstance) => {
           const time_serv = DateTime.fromFormat(i.timeServ, "HHmmss")
           const d_updated = DateTime.fromFormat(i.dUpdate, "yyyyMMddHHmmss")
 
-          const obj: any = {}
-          obj.hospcode = i.hospcode
-          obj.hn = i.hn
-          obj.seq = i.seq
-          obj.date_serv = date_serv.toFormat('yyyy-MM-dd')
-          obj.time_serv = time_serv.toFormat('HH:mm:ss')
-          obj.chiefcomp = i.chiefcomp
-          obj.diag_text = i.diagText
-          obj.d_update = d_updated.toFormat('yyyy-MM-dd HH:mm:ss')
-          obj.ingress_zone = ingress_zone
-          obj.created_at = now
-          obj.updated_at = now
+          const objMetadata: any = {}
+          objMetadata.hospcode = i.hospcode
+          objMetadata.hn = i.hn
+          objMetadata.seq = i.seq
+          objMetadata.date_serv = date_serv.toFormat('yyyy-MM-dd')
+          objMetadata.time_serv = time_serv.toFormat('HH:mm:ss')
+          objMetadata.chiefcomp = i.chiefcomp
+          objMetadata.diag_text = i.diagText
+          objMetadata.d_update = d_updated.toFormat('yyyy-MM-dd HH:mm:ss')
+          objMetadata.ingress_zone = ingress_zone
+          objMetadata.created_at = now
+          objMetadata.updated_at = now
 
-          metadata.push(obj)
+          const objScreening: any = {}
+          objScreening.hospcode = i.hospcode
+          objScreening.hn = i.hn
+          objScreening.date_serv = date_serv.toFormat('yyyy-MM-dd')
+          objScreening.time_serv = time_serv.toFormat('HH:mm:ss')
+          objScreening.sbp = i.sbp
+          objScreening.dbp = i.dbp
+          objScreening.rr = i.rr
+          objScreening.pr = i.pr
+          objScreening.height = i.height
+          objScreening.weight = i.weight
+          objScreening.created_at = now
+          objScreening.updated_at = now
+
+          screening.push(objScreening);
+          metadata.push(objMetadata)
 
         });
 
@@ -81,6 +97,7 @@ export default async (fastify: FastifyInstance) => {
 
         const metaQueue = fastify.createMetaQueue()
         const logQueue = fastify.createLogQueue()
+        const healthProfileQueue = fastify.createHealthProfileQueue()
         const ingressQueue = fastify.createIngressQueue(ingress_zone)
 
         const trx_id = uuidv4()
@@ -102,6 +119,7 @@ export default async (fastify: FastifyInstance) => {
 
         await ingressQueue.add("OPD", ingressData)
         await metaQueue.add('OPD', { metadata })
+        await healthProfileQueue.add('SCREENING', { screening })
         await logQueue.add('INGRESS', logData)
 
         reply
