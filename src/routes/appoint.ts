@@ -38,6 +38,8 @@ export default async (fastify: FastifyInstance) => {
         const body: any = request.body;
         const data = convertCamelCase.camelizeKeys(body)
 
+        let appoint: any = []
+
         let isError = false
 
         data.forEach((i: any) => {
@@ -45,6 +47,21 @@ export default async (fastify: FastifyInstance) => {
             isError = true
             return
           }
+
+          const appoint_date = DateTime.fromFormat(i.appointDate, "yyyyMMdd")
+          const appoint_time = DateTime.fromFormat(i.appointTime, "HHmm")
+
+          const obj: any = {}
+          obj.hospcode = i.hospcode
+          obj.hn = i.hn
+          obj.appoint_date = appoint_date.toFormat('yyyy-MM-dd')
+          obj.appoint_time = appoint_time.toFormat('HH:mm:ss')
+          obj.remark = i.remark
+          obj.created_at = now
+          obj.updated_at = now
+
+          appoint.push(obj);
+
         })
 
         if (isError) {
@@ -58,6 +75,7 @@ export default async (fastify: FastifyInstance) => {
         }
 
         const ingressQueue = fastify.createIngressQueue(ingress_zone)
+        const healthProfileQueue = fastify.createHealthProfileQueue()
         const logQueue = fastify.createLogQueue()
 
         const now = DateTime.now().toSQL({ includeOffset: false })
@@ -79,6 +97,7 @@ export default async (fastify: FastifyInstance) => {
         }
 
         await ingressQueue.add("APPOINT", ingressData)
+        await healthProfileQueue.add('APPOINT', { appoint })
         await logQueue.add('INGRESS', logData)
 
         reply
