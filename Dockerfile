@@ -1,4 +1,4 @@
-FROM node:19-alpine AS build
+FROM node:20-alpine AS build
 
 LABEL maintainer="Satit Rianpit <rianpit@gmail.com>"
 
@@ -6,17 +6,13 @@ WORKDIR /home/api
 
 COPY . .
 
-RUN wget -qO /bin/pnpm "https://github.com/pnpm/pnpm/releases/latest/download/pnpm-linuxstatic-x64" && chmod +x /bin/pnpm
+RUN npm i && npm run build
 
-RUN pnpm i && pnpm run build
+RUN rm -rf src node_modules @types scripts
 
-RUN rm -rf node_modules
+RUN npm i --omit=dev
 
-RUN pnpm i --production
-
-RUN rm -rf src 
-
-FROM node:19-alpine
+FROM node:20-alpine
 
 RUN npm i -g pm2
 
