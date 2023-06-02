@@ -78,7 +78,7 @@ app.decorate("createIngressQueue", (zoneName: any) => {
       },
     },
     defaultJobOptions: {
-      delay: 1000,
+      delay: 30000,
       attempts: 5,
       backoff: {
         type: 'exponential',
@@ -107,7 +107,7 @@ app.decorate("createMetaQueue", () => {
       enableOfflineQueue: true,
     },
     defaultJobOptions: {
-      delay: 1000,
+      delay: 30000,
       attempts: 5,
       backoff: {
         type: 'exponential',
@@ -136,7 +136,7 @@ app.decorate("createHealthProfileQueue", () => {
       enableOfflineQueue: true,
     },
     defaultJobOptions: {
-      delay: 1000,
+      delay: 30000,
       attempts: 5,
       backoff: {
         type: 'exponential',
@@ -165,7 +165,7 @@ app.decorate("createLogQueue", () => {
       enableOfflineQueue: true,
     },
     defaultJobOptions: {
-      delay: 1000,
+      delay: 30000,
       attempts: 5,
       backoff: {
         type: 'exponential',
