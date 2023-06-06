@@ -20,13 +20,32 @@ const app = fastify({
 
 // Plugins
 app.register(require('@fastify/formbody'))
-app.register(require('@fastify/cors'))
+app.register(require('@fastify/cors'), {
+  origin: 'https://r7.moph.go.th',
+  methods: ['GET', 'POST'],
+})
 
 // Rate limit
-app.register(import('@fastify/rate-limit'), {
-  global: false,
-  max: 50,
-  timeWindow: '1 minute'
+const Redis = require('ioredis')
+const redis = new Redis({
+  connectionName: 'ingress-resis',
+  host: process.env.R7PLATFORM_INGR_REDIS_RATELIMIT_HOST || 'localhost',
+  port: Number(process.env.R7PLATFORM_INGR_REDIS_RATELIMIT_PORT) || 6379,
+  password: process.env.R7PLATFORM_INGR_REDIS_RATELIMIT_PASSWORD || '',
+  connectTimeout: 500,
+  maxRetriesPerRequest: 3
+})
+
+app.register(require('@fastify/rate-limit'), {
+  global: true,
+  nameSpace: 'r7platform-ingress-ratelimit-',
+  max: 1000,
+  timeWindow: '1h',
+  ban: 3,
+  keyGenerator: (request: any) => {
+    return request.headers['x-real-ip'];
+  },
+  redis: redis
 })
 
 app.addHook('onSend', (_request: any, reply: any, _playload: any, done: any) => {
@@ -59,7 +78,7 @@ app.decorate("createIngressQueue", (zoneName: any) => {
       },
     },
     defaultJobOptions: {
-      delay: 1000,
+      delay: 30000,
       attempts: 5,
       backoff: {
         type: 'exponential',
@@ -88,7 +107,7 @@ app.decorate("createMetaQueue", () => {
       enableOfflineQueue: true,
     },
     defaultJobOptions: {
-      delay: 1000,
+      delay: 30000,
       attempts: 5,
       backoff: {
         type: 'exponential',
@@ -117,7 +136,7 @@ app.decorate("createHealthProfileQueue", () => {
       enableOfflineQueue: true,
     },
     defaultJobOptions: {
-      delay: 1000,
+      delay: 30000,
       attempts: 5,
       backoff: {
         type: 'exponential',
@@ -146,7 +165,7 @@ app.decorate("createLogQueue", () => {
       enableOfflineQueue: true,
     },
     defaultJobOptions: {
-      delay: 1000,
+      delay: 30000,
       attempts: 5,
       backoff: {
         type: 'exponential',

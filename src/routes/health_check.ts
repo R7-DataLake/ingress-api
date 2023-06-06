@@ -5,23 +5,16 @@ import { DateTime } from "luxon"
 
 export default async (fastify: FastifyInstance) => {
 
-  fastify.get('/health-check', {
-    config: {
-      rateLimit: {
-        max: 3,
-        timeWindow: '1 minute'
-      }
-    }
-  }, async (request: FastifyRequest, reply: FastifyReply) => {
+  fastify.get('/health-check', async (request: FastifyRequest, reply: FastifyReply) => {
     try {
-      const now = DateTime.now().toSQL({ includeOffset: false })
+      const now = DateTime.now().setZone('Asia/Bangkok').toSQL({ includeOffset: false })
       reply.status(StatusCodes.OK)
         .send({
           status: 'ok',
           now,
           server_name: process.env.R7PLATFORM_INGR_SERVICE_HOSTNAME || 'DUMMY',
-          version: '1.0.1',
-          build: '202303102135'
+          version: '1.0.3',
+          build: '202306061502'
         })
     } catch (error: any) {
       request.log.error(error);

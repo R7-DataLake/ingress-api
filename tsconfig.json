@@ -7,17 +7,16 @@
     "module": "commonjs",
     "sourceMap": true,
     "outDir": "./dist",
-    "rootDir": "./src",      
-    "removeComments": true,             
-    "strict": true,                   
+    "rootDir": "./src",
+    "removeComments": true,
+    "strict": true,
     "typeRoots": [
       "node_modules/@types",
       "@types"
     ],
-
-    "esModuleInterop": true,             
-    "experimentalDecorators": true,     
-    "skipLibCheck": true,              
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true
   },
   "exclude": [

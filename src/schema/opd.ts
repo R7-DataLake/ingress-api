@@ -8,7 +8,7 @@ const schema = S.array().minItems(1).maxItems(500).items(
     .prop('DATE_SERV', S.string().maxLength(8).minLength(8).required())
     .prop('TIME_SERV', S.string().maxLength(6).minLength(6).required())
     .prop('SEQ', S.string().maxLength(15).required())
-    .prop('CHIEFCOMP', S.string().maxLength(255).required())
+    .prop('CHIEFCOMP', S.string().maxLength(1024).required())
     .prop('BTEMP', S.number().maximum(999))
     .prop('SBP', S.number().maximum(999))
     .prop('DBP', S.number().maximum(999))
