@@ -33,7 +33,7 @@ const redis = new Redis({
   port: Number(process.env.R7PLATFORM_INGR_REDIS_RATELIMIT_PORT) || 6379,
   password: process.env.R7PLATFORM_INGR_REDIS_RATELIMIT_PASSWORD || '',
   connectTimeout: 500,
-  maxRetriesPerRequest: 1
+  maxRetriesPerRequest: 3
 })
 
 app.register(require('@fastify/rate-limit'), {
