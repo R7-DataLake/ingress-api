@@ -26,14 +26,14 @@ app.register(require('@fastify/cors'), {
 })
 
 // Rate limit
-const Redis = require('ioredis')
+import Redis from 'ioredis'
 const redis = new Redis({
   connectionName: 'ingress-resis',
   host: process.env.R7PLATFORM_INGR_REDIS_RATELIMIT_HOST || 'localhost',
   port: Number(process.env.R7PLATFORM_INGR_REDIS_RATELIMIT_PORT) || 6379,
   password: process.env.R7PLATFORM_INGR_REDIS_RATELIMIT_PASSWORD || '',
   connectTimeout: 500,
-  maxRetriesPerRequest: 3
+  maxRetriesPerRequest: 3,
 })
 
 app.register(require('@fastify/rate-limit'), {
