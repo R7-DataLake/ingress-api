@@ -13,8 +13,8 @@ export default async (fastify: FastifyInstance) => {
           status: 'ok',
           now,
           server_name: process.env.R7PLATFORM_INGR_SERVICE_HOSTNAME || 'DUMMY',
-          version: '1.0.1',
-          build: '202303102135'
+          version: '1.0.2',
+          build: '202306021445'
         })
     } catch (error: any) {
       request.log.error(error);
