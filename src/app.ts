@@ -4,6 +4,7 @@ import fastify from 'fastify'
 const app = fastify({
   bodyLimit: 2 * 1024 * 1024, // 2mb
   logger: {
+    level: process.env.NODE_ENV === 'development' ? 'info' : 'error',
     transport:
       process.env.NODE_ENV === 'development'
         ? {
