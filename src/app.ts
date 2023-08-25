@@ -4,6 +4,7 @@ import fastify from 'fastify'
 const app = fastify({
   bodyLimit: 2 * 1024 * 1024, // 2mb
   logger: {
+    level: process.env.NODE_ENV === 'development' ? 'info' : 'error',
     transport:
       process.env.NODE_ENV === 'development'
         ? {
@@ -78,7 +79,7 @@ app.decorate("createIngressQueue", (zoneName: any) => {
       },
     },
     defaultJobOptions: {
-      delay: 30000,
+      delay: 3000,
       attempts: 5,
       backoff: {
         type: 'exponential',
@@ -107,11 +108,11 @@ app.decorate("createMetaQueue", () => {
       enableOfflineQueue: true,
     },
     defaultJobOptions: {
-      delay: 30000,
+      delay: 5000,
       attempts: 5,
       backoff: {
         type: 'exponential',
-        delay: 3000,
+        delay: 5000,
       },
       removeOnComplete: {
         age: 3600, // keep up to 1 hour
@@ -136,11 +137,11 @@ app.decorate("createHealthProfileQueue", () => {
       enableOfflineQueue: true,
     },
     defaultJobOptions: {
-      delay: 30000,
+      delay: 5000,
       attempts: 5,
       backoff: {
         type: 'exponential',
-        delay: 3000,
+        delay: 5000,
       },
       removeOnComplete: {
         age: 3600, // keep up to 1 hour
@@ -165,11 +166,11 @@ app.decorate("createLogQueue", () => {
       enableOfflineQueue: true,
     },
     defaultJobOptions: {
-      delay: 30000,
+      delay: 5000,
       attempts: 5,
       backoff: {
         type: 'exponential',
-        delay: 3000,
+        delay: 5000,
       },
       removeOnComplete: {
         age: 3600, // keep up to 1 hour
