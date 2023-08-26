@@ -27,14 +27,14 @@ app.register(require('@fastify/cors'), {
 })
 
 // Rate limit
-const Redis = require('ioredis')
+import Redis from 'ioredis'
 const redis = new Redis({
   connectionName: 'ingress-resis',
   host: process.env.R7PLATFORM_INGR_REDIS_RATELIMIT_HOST || 'localhost',
   port: Number(process.env.R7PLATFORM_INGR_REDIS_RATELIMIT_PORT) || 6379,
   password: process.env.R7PLATFORM_INGR_REDIS_RATELIMIT_PASSWORD || '',
   connectTimeout: 500,
-  maxRetriesPerRequest: 3
+  maxRetriesPerRequest: 3,
 })
 
 app.register(require('@fastify/rate-limit'), {
@@ -79,7 +79,7 @@ app.decorate("createIngressQueue", (zoneName: any) => {
       },
     },
     defaultJobOptions: {
-      delay: 30000,
+      delay: 3000,
       attempts: 5,
       backoff: {
         type: 'exponential',
@@ -108,11 +108,11 @@ app.decorate("createMetaQueue", () => {
       enableOfflineQueue: true,
     },
     defaultJobOptions: {
-      delay: 30000,
+      delay: 5000,
       attempts: 5,
       backoff: {
         type: 'exponential',
-        delay: 3000,
+        delay: 5000,
       },
       removeOnComplete: {
         age: 3600, // keep up to 1 hour
@@ -137,11 +137,11 @@ app.decorate("createHealthProfileQueue", () => {
       enableOfflineQueue: true,
     },
     defaultJobOptions: {
-      delay: 30000,
+      delay: 5000,
       attempts: 5,
       backoff: {
         type: 'exponential',
-        delay: 3000,
+        delay: 5000,
       },
       removeOnComplete: {
         age: 3600, // keep up to 1 hour
@@ -166,11 +166,11 @@ app.decorate("createLogQueue", () => {
       enableOfflineQueue: true,
     },
     defaultJobOptions: {
-      delay: 30000,
+      delay: 5000,
       attempts: 5,
       backoff: {
         type: 'exponential',
-        delay: 3000,
+        delay: 5000,
       },
       removeOnComplete: {
         age: 3600, // keep up to 1 hour
